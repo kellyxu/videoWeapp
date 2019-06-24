@@ -1,0 +1,125 @@
+.mine {
+  background:#fff;
+  height:100vh;
+
+  .userInfo {
+    width: 80%;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding:40px 10%;
+    color: #fff;
+    background: #4384FE;
+    .avatar {
+      width: 120px;
+      border-radius: 50%;
+    }
+    .name {
+      font-size: 32px;
+    }
+    .text {
+      font-size: 26px;
+    }
+  }
+
+  .tabHeader {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100px;
+    background: #fff;
+    .item {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+      .text {
+        font-size: 28px;
+        color: #9D9D9D;
+        &.active {
+          color: #4384FE;
+        }
+      }
+      .origin {
+        width: 18px;
+        height: 18px;
+        background: #fff;
+        border-radius: 10px;
+        margin:4rpx;
+        &.active {
+          background: #4384FE;
+        }
+      }
+    }
+  }
+  .list {
+    padding: 40px;
+    .item {
+      height: 140px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .boxLeft {
+        width: 30%;
+        height: 100%;
+      }
+      .boxRight {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+        .header {
+          display: flex;
+          justify-content: space-between;
+          .title {
+            width: 70%;
+            font-size: 28px;
+            color: #1F1F1F;
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            padding-right: 10px;
+          }
+          .btnBox {
+            width: 90px;
+            font-size: 28px;
+            color: #9D9D9D;
+            .editIcon {
+              width: 28px;
+              height: 28px;
+              margin-left: 2px;
+            }
+          }
+        }
+
+        .positionBox {
+          width: 300px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          color: #9D9D9D;
+          font-size: 26px;
+          .icon {
+            width: 20px;
+            height: 20px;
+            margin-left: 5px;
+          }
+        }
+
+        .videoNumber {
+          font-size: 26px;
+          color: #1F1F1F;
+          font-weight: 500;
+          .number {
+            margin-left: 20px;
+          }
+        }
+      }
+    }
+  }
+}

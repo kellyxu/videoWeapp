@@ -1,10 +1,12 @@
 import './app.less';
+import '@tarojs/async-await';
 
 import { Provider } from '@tarojs/mobx';
 import Taro, { Component, Config } from '@tarojs/taro';
 
 import Index from './pages/index';
-import counterStore from './store/counter';
+import addVideoStore from './store/addVideo';
+import indexStore from './store/index';
 import mineStore from './store/mine';
 import registerStore from './store/register';
 import tabBarStore from './store/tabBar';
@@ -16,10 +18,11 @@ import tabBarStore from './store/tabBar';
 // }
 
 const store = {
-  counterStore,
+  indexStore,
   registerStore,
   mineStore,
   tabBarStore,
+  addVideoStore,
 }
 
 class App extends Component {
@@ -36,6 +39,7 @@ class App extends Component {
       'pages/index/index',
       'pages/index/mine',
       'pages/register/register',
+      'pages/video/addVideo',
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -58,6 +62,12 @@ class App extends Component {
     //     {
     //       pagePath: "pages/index/mine",
     //       text: "我的",
+    //       iconPath: "./assets/images/mine.png",
+    //       selectedIconPath: "./assets/images/mine_active.png"
+    //     },
+    //     {
+    //       pagePath: "pages/video/addVideo",
+    //       text: "发布",
     //       iconPath: "./assets/images/mine.png",
     //       selectedIconPath: "./assets/images/mine_active.png"
     //     }

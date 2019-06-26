@@ -28,7 +28,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 1,
+			"current": 3,
 			"list": [
 				{
 					"id": -1,
@@ -39,7 +39,19 @@
 				{
 					"id": -1,
 					"name": "我的",
-					"pathName": "pages/index/mine"
+					"pathName": "pages/index/mine",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "首页",
+					"pathName": "pages/index/index",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "上传视频",
+					"pathName": "pages/video/addVideo"
 				}
 			]
 		}

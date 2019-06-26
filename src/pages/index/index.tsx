@@ -1,17 +1,24 @@
 import './index.less';
 
+import { observable, toJS } from 'mobx';
 import { ComponentType } from 'react';
 
-import { Button, Text, View } from '@tarojs/components';
+import { Button, Map, Text, View } from '@tarojs/components';
+import { marker } from '@tarojs/components/types/Map';
 import { inject, observer } from '@tarojs/mobx';
 import Taro, { Component, Config } from '@tarojs/taro';
 
+import TabBar from '../../components/tabBar/tabBar';
+
 type PageStateProps = {
-  counterStore: {
-    counter: number,
-    increment: Function,
-    decrement: Function,
-    incrementAsync: Function
+  indexStore: {
+    longitude: number;
+    latitude: number;
+    markers: Array<marker>;
+    polyline: Array<any>;
+    controls: Array<any>;
+    circles: Array<any>;
+    init: Function;
   }
 }
 
@@ -19,7 +26,7 @@ interface Index {
   props: PageStateProps;
 }
 
-@inject('counterStore')
+@inject('indexStore')
 @observer
 class Index extends Component {
 
@@ -31,49 +38,41 @@ class Index extends Component {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    navigationBarTitleText: '首页'
+    navigationBarTitleText: '视频'
   }
 
-  componentWillMount () { }
+  componentWillMount() {
+    const { indexStore } = this.props;
+    // indexStore.init();
+  }
 
-  componentWillReact () {
+  componentWillReact() {
     console.log('componentWillReact')
   }
 
-  componentDidMount () { }
-
-  componentWillUnmount () { }
-
-  componentDidShow () { }
-
-  componentDidHide () { }
-
-  increment = () => {
-    const { counterStore } = this.props
-    counterStore.increment()
+  componentDidMount() {
+   
   }
 
-  decrement = () => {
-    const { counterStore } = this.props
-    counterStore.decrement()
-  }
+  componentWillUnmount() { }
 
-  incrementAsync = () => {
-    const { counterStore } = this.props
-    counterStore.incrementAsync()
-  }
+  componentDidShow() { }
 
-  render () {
-    const { counterStore: { counter } } = this.props
+  componentDidHide() { }
+
+  render() {
+    const { indexStore } = this.props;
+    const { longitude,latitude, markers, controls, polyline, circles } = indexStore;
+    console.log('1233',longitude,latitude,toJS(indexStore));
     return (
-      <View className='index'>
-        <Button onClick={this.increment}>+</Button>
-        <Button onClick={this.decrement}>-</Button>
-        <Button onClick={this.incrementAsync}>Add Async</Button>
-        <Text>{counter}</Text>
+      <View className="index">
+        <Map id="map" longitude={longitude} latitude={latitude} scale={14} 
+        controls={controls} markers={markers} polyline={polyline} circles={toJS(circles)}
+        show-location style="width: 100%; height: 100%;"></Map>
+        {/* <TabBar  /> */}
       </View>
     )
   }
 }
 
-export default Index  as ComponentType
+export default Index as ComponentType

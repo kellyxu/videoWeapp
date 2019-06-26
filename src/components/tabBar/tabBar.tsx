@@ -1,5 +1,7 @@
 import './tabBar.less';
 
+import { ComponentType } from 'react';
+
 import { Image, Navigator, Text, View } from '@tarojs/components';
 import { inject, observer } from '@tarojs/mobx';
 import Taro, { Component, Config } from '@tarojs/taro';
@@ -8,7 +10,8 @@ type PageStateProps = {
   tabBarStore: {
     menuOption: Array<any>;
     selected: string;
-    onTabChange: Function;
+    init: Function;
+    changeTab: Function;
   }
 }
 
@@ -20,9 +23,14 @@ interface TabBar {
 @observer
 class TabBar extends Component {
 
+  componentDidMount () {
+    const { tabBarStore } = this.props
+    tabBarStore.init();
+   }
+
   render() {
     const { tabBarStore } = this.props;
-    const { menuOption, selected, onTabChange } = tabBarStore;
+    const { menuOption, selected } = tabBarStore;
     return (
       <View className="tabBar">
         <View className="barList">
@@ -31,7 +39,7 @@ class TabBar extends Component {
               <View
                 className="menuItem"
                 key={item.title}
-                onClick={onTabChange.bind(this, item.name)}
+                onClick={()=>tabBarStore.changeTab(item)}
               >
                 <Image
                   className="icon"
@@ -54,4 +62,4 @@ class TabBar extends Component {
 
 }
 
-export default TabBar;
+export default TabBar as ComponentType

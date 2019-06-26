@@ -9,7 +9,9 @@ import addVideoStore from './store/addVideo';
 import indexStore from './store/index';
 import mineStore from './store/mine';
 import registerStore from './store/register';
+import replyStore from './store/reply';
 import tabBarStore from './store/tabBar';
+import videoDetailStore from './store/videoDetail';
 
 // 如果需要在 h5 环境中开启 React Devtools
 // 取消以下注释：
@@ -23,6 +25,8 @@ const store = {
   mineStore,
   tabBarStore,
   addVideoStore,
+  videoDetailStore,
+  replyStore,
 }
 
 class App extends Component {
@@ -40,6 +44,8 @@ class App extends Component {
       'pages/index/mine',
       'pages/register/register',
       'pages/video/addVideo',
+      'pages/video/videoDetail',
+      'pages/video/reply',
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -47,32 +53,32 @@ class App extends Component {
       navigationBarTitleText: 'WeChat',
       navigationBarTextStyle: 'black'
     },
-    // tabBar: {
-    //   color: "#999999",
-    //   selectedColor: "#00BCD4",
-    //   borderStyle: "white",
-    //   backgroundColor: "#fff",
-    //   list: [
-    //     {
-    //       pagePath: "pages/index/index",
-    //       text: "视频",
-    //       iconPath: "./assets/images/home.png",
-    //       selectedIconPath: "./assets/images/home_active.png"
-    //     },
-    //     {
-    //       pagePath: "pages/index/mine",
-    //       text: "我的",
-    //       iconPath: "./assets/images/mine.png",
-    //       selectedIconPath: "./assets/images/mine_active.png"
-    //     },
-    //     {
-    //       pagePath: "pages/video/addVideo",
-    //       text: "发布",
-    //       iconPath: "./assets/images/mine.png",
-    //       selectedIconPath: "./assets/images/mine_active.png"
-    //     }
-    //   ]
-    // }
+    tabBar: {
+      color: "#999999",
+      selectedColor: "#00BCD4",
+      borderStyle: "white",
+      backgroundColor: "#fff",
+      list: [
+        {
+          pagePath: "pages/index/index",
+          text: "视频",
+          iconPath: "./assets/images/home.png",
+          selectedIconPath: "./assets/images/home_active.png"
+        },
+        {
+          pagePath: "pages/index/mine",
+          text: "我的",
+          iconPath: "./assets/images/mine.png",
+          selectedIconPath: "./assets/images/mine_active.png"
+        },
+        {
+          pagePath: "pages/video/addVideo",
+          text: "发布",
+          iconPath: "./assets/images/mine.png",
+          selectedIconPath: "./assets/images/mine_active.png"
+        }
+      ]
+    }
   }
 
   componentDidMount () {}

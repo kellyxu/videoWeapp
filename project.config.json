@@ -52,6 +52,16 @@
 					"id": -1,
 					"name": "上传视频",
 					"pathName": "pages/video/addVideo"
+				},
+				{
+					"id": -1,
+					"name": "视频详情",
+					"pathName": "pages/video/videoDetail"
+				},
+				{
+					"id": -1,
+					"name": "回复",
+					"pathName": "pages/video/reply"
 				}
 			]
 		}

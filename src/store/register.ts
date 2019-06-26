@@ -2,6 +2,10 @@ import { observable } from 'mobx';
 
 import Taro from '@tarojs/taro';
 
+import * as authApi from '../services/auth.js';
+import commonStore from '../store/common';
+import { wxAuthorize } from '../utils/authorize';
+
 const registerStore = observable({
   mobile: "",
   validate: "",
@@ -17,7 +21,6 @@ const registerStore = observable({
   },
   changeInput(key,e) {
     const value = e.detail.value;
-    console.log(this[key],value)
     this[key] = value;
   },
   getValidate() {
@@ -58,44 +61,51 @@ const registerStore = observable({
       }
     }, 1000)
   },
-  goIndex(e) {
+  async goIndex(e) {
     console.log('登录');
-    Taro.reLaunch({
-      url: "/pages/index/mine"
-    });
-    // const {encryptedData, iv} = e.detail;
-    // if (encryptedData) {
-    //   Taro.showLoading({mask: true, title: "登录中..."});
-    //   // await wxAuthorize();
-    //   const res = await this.login({
-    //     encrypted_data: encryptedData,
-    //     i_v: iv,
-    //     login_type: 2
-    //   });
-    //   Taro.hideLoading();
-    //   const {data, code, message} = res.data;
-    //   if (code === 1 && data) {
-    //     await Taro.setStorage({
-    //       key: "userinfo",
-    //       data: data.user_info
-    //     });
-    //     // await this.setData();
-    //     // await loginComplete(true);
-    //     if (this.redirect) {
-    //       Taro.redirectTo({
-    //         url: this.redirect
-    //       });
-    //     } else {
-    //       Taro.navigateBack();
-    //     }
-    //   } else {
-    //     Taro.showToast({
-    //       title: message,
-    //       duration: 2000,
-    //       icon: "none"
-    //     })
-    //   }
-    // }
+    console.log(' e.detail', e.detail)
+    const {encryptedData, iv, userInfo} = e.detail;
+    await commonStore.setData('userInfo',userInfo);
+    if (encryptedData) {
+      Taro.showLoading({mask: true, title: "注册中..."});
+      // await wxAuthorize();
+      const res = await this.register({
+        // encrypted_data: encryptedData,
+        // i_v: iv,
+        // login_type: 2
+        name: this.name,
+        phone: this.mobile,
+        openid: commonStore.code,
+      });
+      Taro.hideLoading();
+      console.log('res',res)
+      // const {data, code, message} = res.data;
+      // if (code === 1 && data) {
+      //   await Taro.setStorage({
+      //     key: "userinfo",
+      //     data: data.user_info
+      //   });
+      //   // await this.setData();
+      //   // await loginComplete(true);
+      //   if (this.redirect) {
+      //     Taro.redirectTo({
+      //       url: this.redirect
+      //     });
+      //   } else {
+      //     Taro.navigateBack();
+      //   }
+      // } else {
+      //   Taro.showToast({
+      //     title: message,
+      //     duration: 2000,
+      //     icon: "none"
+      //   })
+      // }
+    }
   },
+  async register(params) {
+    const result = await authApi.setUser(params);
+    return result;
+  }
 })
 export default registerStore

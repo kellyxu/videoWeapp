@@ -6,8 +6,6 @@ import { Button, Image, Input, Map, Text, Video, View } from '@tarojs/components
 import { inject, observer } from '@tarojs/mobx';
 import Taro, { Component, Config } from '@tarojs/taro';
 
-import TabBar from '../../components/tabBar/tabBar';
-
 type PageStateProps = {
   replyStore: {
     reply: string;

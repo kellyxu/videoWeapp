@@ -100,7 +100,7 @@ class Register extends Component {
           
           <Button
             onGetUserInfo={(event)=>registerStore.goIndex(event)}
-            // disabled={!(validate && mobile && name)}
+            disabled={!(validate && mobile && name)}
             openType="getUserInfo"
             className="save"
           >

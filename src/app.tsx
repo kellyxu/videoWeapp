@@ -6,12 +6,14 @@ import Taro, { Component, Config } from '@tarojs/taro';
 
 import Index from './pages/index';
 import addVideoStore from './store/addVideo';
+import commonStore from './store/common';
 import indexStore from './store/index';
 import mineStore from './store/mine';
 import registerStore from './store/register';
 import replyStore from './store/reply';
 import tabBarStore from './store/tabBar';
 import videoDetailStore from './store/videoDetail';
+import { wxAuthorize } from './utils/authorize';
 
 // 如果需要在 h5 环境中开启 React Devtools
 // 取消以下注释：
@@ -27,6 +29,7 @@ const store = {
   addVideoStore,
   videoDetailStore,
   replyStore,
+  commonStore,
 }
 
 class App extends Component {
@@ -66,14 +69,14 @@ class App extends Component {
           selectedIconPath: "./assets/images/home_active.png"
         },
         {
-          pagePath: "pages/index/mine",
-          text: "我的",
-          iconPath: "./assets/images/mine.png",
-          selectedIconPath: "./assets/images/mine_active.png"
+          pagePath: "pages/video/addVideo",
+          text: "",
+          iconPath: "./assets/images/add.png",
+          selectedIconPath: "./assets/images/add_icon.png"
         },
         {
-          pagePath: "pages/video/addVideo",
-          text: "发布",
+          pagePath: "pages/index/mine",
+          text: "我的",
           iconPath: "./assets/images/mine.png",
           selectedIconPath: "./assets/images/mine_active.png"
         }
@@ -81,8 +84,9 @@ class App extends Component {
     }
   }
 
-  componentDidMount () {}
-
+  async componentDidMount() {
+    await wxAuthorize();
+  }
   componentDidShow () {}
 
   componentDidHide () {}

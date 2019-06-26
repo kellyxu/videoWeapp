@@ -34,6 +34,9 @@ class AddVideo extends Component {
   }
 
   componentWillMount() {
+    Taro.hideTabBar({
+      
+    })
   }
 
   componentWillReact() {

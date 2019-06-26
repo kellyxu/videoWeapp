@@ -19,6 +19,10 @@ type PageStateProps = {
     controls: Array<any>;
     circles: Array<any>;
     init: Function;
+  },
+  commonStore: {
+    init: Function;
+    getUserInfo: Function;
   }
 }
 
@@ -26,7 +30,7 @@ interface Index {
   props: PageStateProps;
 }
 
-@inject('indexStore')
+@inject('indexStore','commonStore')
 @observer
 class Index extends Component {
 
@@ -41,9 +45,9 @@ class Index extends Component {
     navigationBarTitleText: '视频'
   }
 
-  componentWillMount() {
+  async componentWillMount() {
     const { indexStore } = this.props;
-    // indexStore.init();
+    await indexStore.init();
   }
 
   componentWillReact() {
@@ -51,7 +55,6 @@ class Index extends Component {
   }
 
   componentDidMount() {
-   
   }
 
   componentWillUnmount() { }
@@ -63,7 +66,6 @@ class Index extends Component {
   render() {
     const { indexStore } = this.props;
     const { longitude,latitude, markers, controls, polyline, circles } = indexStore;
-    console.log('1233',longitude,latitude,toJS(indexStore));
     return (
       <View className="index">
         <Map id="map" longitude={longitude} latitude={latitude} scale={14} 

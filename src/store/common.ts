@@ -5,8 +5,10 @@ import Taro, { Component } from '@tarojs/taro';
 import { getOpenId } from '../services/service';
 
 const commonStore = observable({
-  code: "",
-  userInfo: {},
+  wxUserInfo: {},
+  user: {
+    openid: ""
+  },
   async init() {
     
      
@@ -15,10 +17,18 @@ const commonStore = observable({
     this[key] = value;
   },
   async getUserInfo() {
-    const res = await getOpenId({
-      code: "111"
+    const { code } = await Taro.login();
+    const {data} = await getOpenId({
+      code
     });
-    console.log('res',res)
+    if(data) {
+      await commonStore.setData('user',data);
+      if(!data.uid) {
+        Taro.navigateTo({
+          url: '/pages/register/register',
+        });
+      } 
+    }
   }
 
 })

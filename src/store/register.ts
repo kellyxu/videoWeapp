@@ -2,9 +2,8 @@ import { observable } from 'mobx';
 
 import Taro from '@tarojs/taro';
 
-import * as authApi from '../services/auth.js';
+import { setUser } from '../services/service';
 import commonStore from '../store/common';
-import { wxAuthorize } from '../utils/authorize';
 
 const registerStore = observable({
   mobile: "",
@@ -62,50 +61,29 @@ const registerStore = observable({
     }, 1000)
   },
   async goIndex(e) {
-    console.log('登录');
-    console.log(' e.detail', e.detail)
-    const {encryptedData, iv, userInfo} = e.detail;
-    await commonStore.setData('userInfo',userInfo);
-    if (encryptedData) {
+    const {userInfo} = e.detail;
+    await commonStore.setData('wxUserInfo',userInfo);
+    if (userInfo) {
       Taro.showLoading({mask: true, title: "注册中..."});
-      // await wxAuthorize();
-      const res = await this.register({
-        // encrypted_data: encryptedData,
-        // i_v: iv,
-        // login_type: 2
+      const res = await setUser({
         name: this.name,
         phone: this.mobile,
-        openid: commonStore.code,
+        openid: commonStore.user.openid,
+        logo: userInfo.avatarUrl,
       });
       Taro.hideLoading();
-      console.log('res',res)
-      // const {data, code, message} = res.data;
-      // if (code === 1 && data) {
-      //   await Taro.setStorage({
-      //     key: "userinfo",
-      //     data: data.user_info
-      //   });
-      //   // await this.setData();
-      //   // await loginComplete(true);
-      //   if (this.redirect) {
-      //     Taro.redirectTo({
-      //       url: this.redirect
-      //     });
-      //   } else {
-      //     Taro.navigateBack();
-      //   }
-      // } else {
-      //   Taro.showToast({
-      //     title: message,
-      //     duration: 2000,
-      //     icon: "none"
-      //   })
-      // }
+      if(res.status === "success") {
+        Taro.reLaunch({
+          url: '/pages/index/index'
+        })
+      }
+    } else {
+      Taro.showToast({
+        title: "用户信息获取失败！",
+        duration: 2000,
+        icon: "none"
+      })
     }
   },
-  async register(params) {
-    const result = await authApi.setUser(params);
-    return result;
-  }
 })
 export default registerStore

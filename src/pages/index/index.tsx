@@ -6,7 +6,7 @@ import { ComponentType } from 'react';
 import { Button, Map, Text, View } from '@tarojs/components';
 import { marker } from '@tarojs/components/types/Map';
 import { inject, observer } from '@tarojs/mobx';
-import Taro, { Component, Config } from '@tarojs/taro';
+import Taro, { Component, Config, MapContext } from '@tarojs/taro';
 
 import TabBar from '../../components/tabBar/tabBar';
 
@@ -23,27 +23,28 @@ type PageStateProps = {
   commonStore: {
     init: Function;
     getUserInfo: Function;
-  }
+  },
 }
 
 interface Index {
   props: PageStateProps;
+}
+interface IndexState {
+  mapCtx: any;
+  // mapCtx: MapContext
 }
 
 @inject('indexStore','commonStore')
 @observer
 class Index extends Component {
 
-  /**
-   * 指定config的类型声明为: Taro.Config
-   *
-   * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
-   * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
-   * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
-   */
   config: Config = {
     navigationBarTitleText: '视频'
   }
+
+  state:IndexState = {
+    mapCtx: "",
+  };
 
   async componentWillMount() {
     const { indexStore } = this.props;
@@ -55,6 +56,14 @@ class Index extends Component {
   }
 
   componentDidMount() {
+    const mapCtx = Taro.createMapContext('map');
+    console.log('mapCtx',mapCtx)
+    this.setState({
+      mapCtx
+    },()=>{
+      this.getRegion();
+    })
+    
   }
 
   componentWillUnmount() { }
@@ -62,6 +71,17 @@ class Index extends Component {
   componentDidShow() { }
 
   componentDidHide() { }
+
+  getRegion() {
+    this.state.mapCtx.getRegion({
+      success: (res)=>{
+        console.log(res)
+      },
+      fail: (res)=>{
+        console.log(res)
+      },
+    })
+  }
 
   render() {
     const { indexStore } = this.props;

@@ -57,7 +57,7 @@ export default class Http {
     if (!/^http(s)\:\/\/.*/.test(url) && baseUrl) {
       url = baseUrl + url;
     }
-    let newConfig = await executeInterceptors.call(this, [...this.interceptors.request], {
+    let newConfig = {
       ...baseConfig,
       ...config,
       url,
@@ -66,30 +66,35 @@ export default class Http {
         ...baseConfig.header,
         ...config.header
       }
-    });
+    };
     console.log("request => ", newConfig);
-    if (!newConfig.isQuieted) {
-      connections++;
-    }
-    if (connections > 0) {
-      showLoading();
-    }
     let res;
     try {
       res = await Taro.request({ ...newConfig });
     } catch (e) {
       throw e;
     } finally {
-      if (!newConfig.isQuieted) {
-        connections--;
-      }
-      if (connections <= 0) {
-        hideLoading();
+    }
+    console.log("response => ", res);
+    res.config = newConfig;
+    if(res.statusCode !== 200) {
+      Taro.showToast({
+        title: "操作失败！",
+        duration: 2000,
+        icon: "none"
+      })
+      throw new Error("操作失败");
+    } else {
+      if(res.data.status !== "success") {
+        Taro.showToast({
+          title: res.data.msg,
+          duration: 2000,
+          icon: "none"
+        })
+        throw new Error("接口失败");
       }
     }
-    console.log("response => ", res.data);
-    res.config = newConfig;
-    return await executeInterceptors.call(this, [...this.interceptors.response], res);
+    return res.data;
   }
   post(url, data, config = {}) {
     return this.request({
@@ -100,9 +105,12 @@ export default class Http {
     });
   }
   get(url, config = {}) {
+    var i, path='';
+    for(i in config) path+='&'+i+'='+config[i];
     return this.request({
       method: "GET",
-      url,
+      url:url + path.replace(/./, '?'),
+      // url,
       ...config
     });
   }

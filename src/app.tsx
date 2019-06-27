@@ -13,7 +13,6 @@ import registerStore from './store/register';
 import replyStore from './store/reply';
 import tabBarStore from './store/tabBar';
 import videoDetailStore from './store/videoDetail';
-import { wxAuthorize } from './utils/authorize';
 
 // 如果需要在 h5 环境中开启 React Devtools
 // 取消以下注释：
@@ -85,7 +84,7 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    await wxAuthorize();
+    await commonStore.getUserInfo();
   }
   componentDidShow () {}
 

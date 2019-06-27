@@ -11,7 +11,7 @@ const http = getHttpRequest({
 http.useRequestInterceptor(config => {
   if (config.method === 'POST') {
     config.data = {
-      business_appid: '1001',
+      // business_appid: '1001',
       time_stamp: new Date().valueOf(),
       ...config.data
     };
@@ -19,37 +19,27 @@ http.useRequestInterceptor(config => {
 
   return config;
 });
-
 /**
  * 获取用户信息
- * @param {code:''}
+ * @param {code} params
  */
 export const getOpenId = params =>
-  http.post('/getOpenId?code', params);
+  http.get("getOpenId", params);
 
 /**
- * 获取首页展示信息
- * @param {contract_person_code:''}
+ * 注册
+ * @param {name,openid,phone,logo} params
  */
-export const getMyIndexShow = params =>
-  http.post('v2.0/Contract/GetMyIndexShow', params);
+export const setUser = params =>
+  http.get("setUser", params);
 
 /**
- * 查询我的管家
- * @param {} params
+ * 视频地图列表
+ * @param {name,openid,phone,logo} params
  */
+export const getMapList = params =>  
+  http.get("list", params);
+ 
 
-export const GetMyManage = params =>
-  http.post('v2.0/Contract/GetMyManage', params);
 
-
-/**
- * 获取 首页配置
- * @param {Object} params
- */
-export const getHomeConfig = params =>
-  http.post("v2.0/Home/GetData", params, {
-    disableWxAuthorized: true,
-    disableUserAuthorized: true
-  });
 

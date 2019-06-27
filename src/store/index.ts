@@ -2,6 +2,8 @@ import { observable } from 'mobx';
 
 import Taro, { Component } from '@tarojs/taro';
 
+import { getMapList } from '../services/service';
+
 const indexStore = observable({
   latitude: 31.11325,
   longitude: 121.38206,
@@ -23,14 +25,19 @@ const indexStore = observable({
       },
     },
   ],
-
   async init() {
+    this.getLocation();
+  },
+  async getLocation() {
     try {
-      const res = await Taro.getLocation({
+      const location = await Taro.getLocation({
         type: 'wgs84',
       });
-      this.latitude = res.latitude;
-      this.longitude = res.longitude;
+      this.latitude = location.latitude;
+      this.longitude = location.longitude;
+      // const res = await getMapList({
+      //   minlat:""
+      // });
     } catch(res) {
       Taro.showToast({
         title: "定位失败！",
@@ -38,7 +45,10 @@ const indexStore = observable({
         icon: "none"
       });
     }
-     
+  },
+  getMapList() {
+    
   }
+
 })
 export default indexStore

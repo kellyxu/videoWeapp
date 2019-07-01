@@ -1,26 +1,25 @@
 import './videoDetail.less';
 
+import { toJS } from 'mobx';
 import { ComponentType } from 'react';
 
 import { Button, Image, Input, Map, Text, Video, View } from '@tarojs/components';
 import { inject, observer } from '@tarojs/mobx';
 import Taro, { Component, Config } from '@tarojs/taro';
 
-import TabBar from '../../components/tabBar/tabBar';
+import Tips from '../../components/tips/tips';
+import { ICommontStore, IVideoDetailStore } from '../../store/interface';
 
 type PageStateProps = {
-  videoDetailStore: {
-    videoSrc: string;
-    comment: string;
-    changeInput: Function;
-  }
+  videoDetailStore: IVideoDetailStore,
+  commonStore: ICommontStore;
 }
 
 interface VideoDeatil {
   props: PageStateProps;
 }
 
-@inject('videoDetailStore')
+@inject('videoDetailStore', 'commonStore')
 @observer
 class VideoDeatil extends Component {
 
@@ -35,8 +34,10 @@ class VideoDeatil extends Component {
     console.log('componentWillReact')
   }
 
-  componentDidMount() {
-
+  async componentDidMount() {
+    const { videoDetailStore } = this.props;
+    const params = this.$router.params;
+    await videoDetailStore.init(params);
   }
 
   componentWillUnmount() { }
@@ -46,19 +47,28 @@ class VideoDeatil extends Component {
   componentDidHide() { }
 
   render() {
-    const { videoDetailStore } = this.props;
-    const { videoSrc, comment } = videoDetailStore;
+    const { videoDetailStore, commonStore } = this.props;
+    const { comment, num, commentList, videoDetail } = videoDetailStore;
+    const { user } = commonStore;
+    console.log('videoDetail', commentList)
+
+    const tipData = {
+      icon: '',
+      title: '',
+      des: ['快来抢沙发吧']
+    };
+
     return (
       <View className="videoDetail">
         <View className="videoBox">
-          <Video className="myVideo" src={videoSrc}
+          <Video className="myVideo" src={videoDetail.url}
             show-center-play-btn enable-danmu controls autoplay={true}
           ></Video>
         </View>
 
         <View className="content">
           <View className="headerBox">
-            <Text className="title">来上海旅游，第一天</Text>
+            <Text className="title">{videoDetail.title}</Text>
             <View className="position">
               <View className="position">
                 <Image
@@ -66,7 +76,7 @@ class VideoDeatil extends Component {
                   mode="widthFix"
                   src={require("../../assets/images/position_icon.png")}
                 />
-                <Text className="text">上海-青浦区</Text>
+                <Text className="text">{videoDetail.province}-{videoDetail.city}-{videoDetail.street}</Text>
               </View>
             </View>
           </View>
@@ -75,9 +85,9 @@ class VideoDeatil extends Component {
               <Image
                 className="icon"
                 mode="widthFix"
-                src={require("../../assets/images/position_icon.png")}
+                src={user && user.logo ? user.logo : require("../../assets/images/avatar.png")}
               />
-              <Text className="text">用户昵称</Text>
+              <Text className="text">{user.name}</Text>
             </View>
             <View className="item">
               <Image
@@ -85,7 +95,7 @@ class VideoDeatil extends Component {
                 mode="widthFix"
                 src={require("../../assets/images/position_icon.png")}
               />
-              <Text className="text">1207</Text>
+              <Text className="text">{videoDetail.hits}</Text>
             </View>
             <View className="item">
               <Image
@@ -93,11 +103,11 @@ class VideoDeatil extends Component {
                 mode="widthFix"
                 src={require("../../assets/images/date_icon.png")}
               />
-              <Text className="text">昨天</Text>
+              <Text className="text">{videoDetail.time}</Text>
             </View>
           </View>
           <View className="detailInfo">
-            <Text className="allInfo">这是一段视频简介文字，这是一段视频简介文字，这是一段视频简介文字，这是一段视频简介文视频简介文字，这是一</Text>
+            <Text className="allInfo">{videoDetail.content}</Text>
             {/* <Text className="show">展开</Text> */}
           </View>
 
@@ -106,68 +116,41 @@ class VideoDeatil extends Component {
         <View className="comment">
           <View className="title">
             <Text>评论</Text>
-            <Text className="number">121</Text>
+            <Text className="number">{num}</Text>
           </View>
-          <View className="list">
-            <View className="item">
-              <Image
-                className="headImg"
-                mode="widthFix"
-                src={require("../../assets/images/avatar.png")}
-              />
-              <View className="detail">
-                <View className="name">
-                  谢敏
-                </View>
-                <View className="text">
-                  一直都想去上海，羡慕～
-                </View>
-                <View className="date">
-                  <Text>2019-03-21</Text>
-                  <Text className="num">13回复</Text>
-                </View>
-              </View>
-            </View>
-            <View className="item">
-              <Image
-                className="headImg"
-                mode="widthFix"
-                src={require("../../assets/images/avatar.png")}
-              />
-              <View className="detail">
-                <View className="name">
-                  谢敏
-                </View>
-                <View className="text">
-                  一直都想去上海，羡慕～
-                </View>
-                <View className="date">
-                  <Text>2019-03-21</Text>
-                  <Text className="num">13回复</Text>
-                </View>
-              </View>
-            </View>
-            <View className="item">
-              <Image
-                className="headImg"
-                mode="widthFix"
-                src={require("../../assets/images/avatar.png")}
-              />
-              <View className="detail">
-                <View className="name">
-                  谢敏
-                </View>
-                <View className="text">
-                  语雀是一款优雅高效的在线文档编辑与协同工具， 让每个企业轻松拥有文档中心阿里巴巴集团内部使用多年，众多中小企业首选。
-                </View>
-                <View className="date">
-                  <Text>2019-03-21</Text>
-                  <Text className="num">13回复</Text>
-                </View>
-              </View>
-            </View>
+          {
+            toJS(commentList).length > 0 ? (
+              <View className="list">
+                {
+                  toJS(commentList).map((item) => {
+                    return (
+                      <View className="item" key={item.id} onClick={()=>videoDetailStore.goComentDetail(item)}>
+                        <Image
+                          className="headImg"
+                          mode="widthFix"
+                          src={require("../../assets/images/avatar.png")}
+                        />
+                        <View className="detail">
+                          <View className="name">
+                            {item.user.name}
+                          </View>
+                          <View className="text">
+                            {item.content}
+                          </View>
+                          <View className="date">
+                            <Text>{item.time}</Text>
+                            <Text className="num">{item.replys}回复</Text>
+                          </View>
+                        </View>
+                      </View>
+                    )
+                  })
+                }
 
-          </View>
+              </View>
+            ) : (<Tips data={tipData} />)
+          }
+
         </View>
 
         <View className="footer">
@@ -179,7 +162,8 @@ class VideoDeatil extends Component {
             value={comment}
             onInput={(event) => videoDetailStore.changeInput(event)}
           />
-          <Button className="btn" 
+          <Button className="btn"
+            onClick={() => videoDetailStore.addVideoComment()}
             disabled={!comment} >
             发送
           </Button>

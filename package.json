@@ -35,8 +35,10 @@
     "@tarojs/taro-tt": "1.2.26",
     "@tarojs/taro-weapp": "1.2.26",
     "mobx": "4.8.0",
+    "mobx-react": "^6.1.1",
     "nerv-devtools": "^1.3.9",
     "nervjs": "^1.3.9",
+    "react-dom": "^16.8.6",
     "regenerator-runtime": "^0.13.2"
   },
   "devDependencies": {

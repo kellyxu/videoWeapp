@@ -1,31 +1,26 @@
 import './addVideo.less';
 
+import { toJS } from 'mobx';
 import { ComponentType } from 'react';
 
-import { Button, Image, Input, Text, Textarea, Video, View } from '@tarojs/components';
+import {
+    Button, Image, Input, Picker, PickerView, PickerViewColumn, Text, Textarea, Video, View
+} from '@tarojs/components';
 import { inject, observer } from '@tarojs/mobx';
 import Taro, { Component, Config } from '@tarojs/taro';
 
+import { IAddVideoStore, ICommontStore } from '../../store/interface';
+
 type PageStateProps = {
-  addVideoStore: {
-    title: string;
-    titleLen: string;
-    info: string;
-    infoLen: string;
-    videoSrc: string;
-    positionName: string;
-    init: Function;
-    getLocation: Function;
-    changeInput: Function;
-    changeVideo: Function;
-  }
+  addVideoStore: IAddVideoStore;
+  commonStore: ICommontStore;
 }
 
 interface AddVideo {
   props: PageStateProps;
 }
 
-@inject('addVideoStore')
+@inject('addVideoStore','commonStore')
 @observer
 class AddVideo extends Component {
 
@@ -56,8 +51,10 @@ class AddVideo extends Component {
 
 
   render() {
-    const { addVideoStore } = this.props;
-    const { title, titleLen, info, infoLen, videoSrc, positionName } = addVideoStore;
+    const { addVideoStore, commonStore } = this.props;
+    const { title, titleLen, info, infoLen, videoSrc, positionName, selectIndex } = addVideoStore;
+    const { areaRange } = commonStore;
+    console.log('areaRange',toJS(areaRange))
     return (
       <View className="addVideo">
         <View className="main">
@@ -100,6 +97,14 @@ class AddVideo extends Component {
               <Text className="itemRight">{infoLen}</Text>
             </View>
           </View>
+
+          <PickerView value={selectIndex} onChange={()=>addVideoStore.regionChange()} >
+            <PickerViewColumn>
+            {
+              
+            }
+            </PickerViewColumn>
+          </PickerView>
 
 
           <Button

@@ -1,6 +1,9 @@
 import './app.less';
 import '@tarojs/async-await';
 
+import { autorun } from 'mobx';
+import { disposeOnUnmount, observer } from 'mobx-react';
+
 import { Provider } from '@tarojs/mobx';
 import Taro, { Component, Config } from '@tarojs/taro';
 
@@ -83,8 +86,12 @@ class App extends Component {
     }
   }
 
+  async componentWillMount () { 
+    await commonStore.init();
+  }
+
   async componentDidMount() {
-    await commonStore.getUserInfo();
+    // await commonStore.init();
   }
   componentDidShow () {}
 

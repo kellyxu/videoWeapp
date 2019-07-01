@@ -19,6 +19,14 @@ http.useRequestInterceptor(config => {
 
   return config;
 });
+
+/**
+ * 配置
+ * @param {} 
+ */
+export const getConfig = () =>  
+  http.get("config");
+ 
 /**
  * 获取用户信息
  * @param {code} params
@@ -40,6 +48,48 @@ export const setUser = params =>
 export const getMapList = params =>  
   http.get("list", params);
  
+/**
+ * 视频详情
+ * @param {id} params
+ */
+export const getVideoDetail = params =>  
+  http.get("info", params);
+ 
+ 
+/**
+ * 视频评论列表
+ * @param {page,id} params
+ */
+export const getVideoComments = params =>  
+  http.get("comments", params);
+ 
+/**
+ * 添加评论
+ * @param {uid,content,vid} params
+ */
+export const addComment = params =>  
+  http.get("addComment", params);
+ 
+/**
+ * 我的视频
+ * @param {uid,status,page} params
+ */
+export const getMyVideoList = params =>  
+  http.get("myVideoList", params);
 
+/**
+ * 增加/编辑视频
+ * @param {id,title,url,descp,uid} params
+ */
+export const addVideo = params =>  
+http.get("addVideo", params);
 
+/**
+ * 获取省市区
+ * @param {} 
+ */
+export const getArea = () =>  
+  http.get("area");
+
+ 
 

@@ -28,7 +28,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 3,
+			"current": 4,
 			"list": [
 				{
 					"id": -1,
@@ -51,17 +51,32 @@
 				{
 					"id": -1,
 					"name": "上传视频",
-					"pathName": "pages/video/addVideo"
+					"pathName": "pages/video/addVideo",
+					"query": ""
 				},
 				{
-					"id": -1,
+					"id": 4,
 					"name": "视频详情",
-					"pathName": "pages/video/videoDetail"
+					"pathName": "pages/video/videoDetail",
+					"query": "id=1"
 				},
 				{
 					"id": -1,
 					"name": "回复",
-					"pathName": "pages/video/reply"
+					"pathName": "pages/video/reply",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "上传视频",
+					"pathName": "pages/video/addVideo",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "上传视频",
+					"pathName": "pages/video/addVideo",
+					"query": ""
 				}
 			]
 		}

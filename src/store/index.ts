@@ -63,21 +63,8 @@ const indexStore = observable({
     }
   },
   async getMapList(northeast, southwest) {
-    const { data = [] } = await getMapList({
-      maxlat: northeast.latitude,
-      minlat: southwest.latitude,
-      maxlng: northeast.longitude,
-      minlng: southwest.longitude,
-      type: this.type,
-      aid: this.aid ? this.aid : "",
-    });
 
-    runInAction(() => {
-      if (data.length > 0) {
-        this.list = data;
-      } else {
-        this.list = [];
-      }
+    runInAction(async() => {
       if (this.isCallout && this.type === "province") {
         this.type = "city";
         this.scale = 10;
@@ -92,10 +79,26 @@ const indexStore = observable({
         this.isCallout = false;
       } else if(this.isCallout && this.type === "video") {
         console.log('进入详情',this.aid)
-        Taro.redirectTo({
+        Taro.navigateTo({
           url: `/pages/video/videoDetail?id=${this.aid}`
         });
       }
+
+      const { data = [] } = await getMapList({
+        maxlat: northeast.latitude,
+        minlat: southwest.latitude,
+        maxlng: northeast.longitude,
+        minlng: southwest.longitude,
+        type: this.type,
+        aid: this.aid ? this.aid : "",
+      });
+
+      if (data.length > 0) {
+        this.list = data;
+      } else {
+        this.list = [];
+      }
+      
     })
   },
   setlocation(latitude, longitude) {

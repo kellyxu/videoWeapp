@@ -30,7 +30,6 @@ const mineStore = observable({
   tab: tab,
   tabActive: 1,
   page: 1,
-  page_count: 10,
   list:[],
   async init() {
     
@@ -64,7 +63,6 @@ const mineStore = observable({
       uid: commonStore.user.uid,
       status: this.tabActive,
       page: this.page,
-      page_count: this.page_count
     });
     runInAction(()=>{
       this.list = data.list;

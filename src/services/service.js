@@ -96,7 +96,7 @@ export const getMyVideoList = params =>
  * @param {id,title,url,descp,uid} params
  */
 export const addVideo = params =>  
-http.get("addVideo", params);
+http.post("addVideo", params);
 
 /**
  * 获取省市区

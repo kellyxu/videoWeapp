@@ -46,7 +46,7 @@ class Mine extends Component {
   render() {
     const { mineStore, commonStore } = this.props;
     const { tab, list } = mineStore;
-    const { name, text } = commonStore;
+    const { user, name, text } = commonStore;
 
     const tipData = {
       icon: require("../../assets/images/empty.png"),
@@ -60,11 +60,18 @@ class Mine extends Component {
           <Image
             className="avatar"
             mode="widthFix"
-            src={require("../../assets/images/avatar.png")}
+            src={user && user.logo ? user.logo : require("../../assets/images/avatar.png")}
           />
           <Text className="name">{name}</Text>
           <Text className="text">{text}</Text>
+          
         </View>
+        <Image
+            className="bolang"
+            mode="widthFix"
+            src={require("../../assets/images/bolang.png")}
+          />
+        
 
         <View className="content">
           <View className="tabHeader">

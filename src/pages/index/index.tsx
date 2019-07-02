@@ -111,7 +111,7 @@ class Index extends Component {
   onRegionChange(e?) {
     console.log('onRegionChange', e)
     // 获取中心点
-    if(e.detail.type === "end") {
+    if(e.type === "end") {
       this.getCenterLocation();
     }
   }

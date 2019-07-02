@@ -44,15 +44,6 @@ class AddVideo extends Component {
   async componentDidMount() {
     const { addVideoStore, commonStore } = this.props;
     await addVideoStore.init();
-
-    const areaRange = commonStore.areaRange;
-    if (areaRange) {
-      const provinces = [areaRange, areaRange[0].childAreas, areaRange[0].childAreas[0].childAreas];
-      this.setState({
-        provinces
-      })
-      console.log('this.provinces', toJS(provinces))
-    }
     
   }
 
@@ -62,42 +53,11 @@ class AddVideo extends Component {
 
   componentDidHide() { }
 
-  regionColumnChange(e) {
-    const { addVideoStore, commonStore } = this.props;
-    const { provinces } = this.state;
-    const detail = e.detail;
-    const { value, column } = detail;
-    let selectIndex = this.state.selectIndex;
-    //如果更新的是第一列“省”，第二列“市”和第三列“区”的数组下标置为0
-    if (column == 0) {
-      selectIndex = [value, 0, 0];
-    } else if (column == 1) {
-      //如果更新的是第二列“市”，第一列“省”的下标不变，第三列“区”的数组下标置为0
-      selectIndex = [selectIndex[0], value, 0];
-    } else if (column == 2) {
-      //如果更新的是第三列“区”，第一列“省”和第二列“市”的值均不变。
-      selectIndex = [selectIndex[0], selectIndex[1], value];
-    }
-    const temp = commonStore.areaRange;
-    provinces[0] = temp;
-    if ((temp[selectIndex[0]].childAreas).length > 0) {
-      //如果第二列“市”的个数大于0,通过selectIndex变更provinces[1]的值
-      provinces[1] = temp[selectIndex[0]].childAreas;
-      const areaArr = (temp[selectIndex[0]].childAreas[selectIndex[1]]).childAreas || [];
-      //如果第三列“区”的个数大于0,通过selectIndex变更provinces[2]的值；否则赋值为空数组
-      provinces[2] = areaArr.length > 0 ? areaArr : [];
-    } else {
-      //如果第二列“市”的个数不大于0，那么第二列“市”和第三列“区”都赋值为空数组
-      provinces[1] = [];
-      provinces[2] = [];
-    }
-  },
-
   render() {
     const { addVideoStore, commonStore } = this.props;
-    const { title, titleLen, info, infoLen, videoSrc, selectIndex, provinces, locationName } = addVideoStore;
+    const { title, titleLen, info, infoLen, videoSrc, selectIndex, provinces, locationName, location } = addVideoStore;
     const multiArray = toJS(provinces);
-    const multiIndex = toJS(selectIndex) || [0, 0, 0];
+    const multiIndex = toJS(selectIndex);
     console.log('multiArray', multiArray)
     console.log('multiIndex', multiIndex)
     return (
@@ -109,7 +69,7 @@ class AddVideo extends Component {
                 <Video className="myVideo" src={videoSrc}
                   show-center-play-btn enable-danmu controls autoplay={true}
                 ></Video>
-                <View className="">
+                <View className="update">
                   <Text onClick={async () => await addVideoStore.changeVideo()}>重新上传</Text>
                 </View>
               </View>) : (
@@ -139,9 +99,15 @@ class AddVideo extends Component {
                   onColumnChange={(e) => addVideoStore.regionColumnChange(e)}
                   value={multiIndex} range={multiArray}>
                   <View className="picker">
-                    {`${multiArray[0][multiIndex[0]].name}，${multiArray[1][multiIndex[1]].name}，${multiArray[2][multiIndex[2]].name}`}
+                    {locationName}
                   </View>
                 </Picker>
+              </View>
+              {/* <Text className="itemRight" onClick={() => addVideoStore.getLocation()}>获取定位</Text> */}
+            </View>
+            <View className="item position">
+              <View className="itemLeft">
+                <View className="location">{location.name}</View>
               </View>
               <Text className="itemRight" onClick={() => addVideoStore.getLocation()}>获取定位</Text>
             </View>

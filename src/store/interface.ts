@@ -52,7 +52,6 @@ export interface IAddVideoStore {
   selectIndex: any;
   multiArray: Array<any>;
   multiIndex: any;
-  isLocation: Boolean;
   locationId: any;
   locationName: string;
   location: any;

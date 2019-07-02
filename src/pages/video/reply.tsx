@@ -1,23 +1,25 @@
 import './reply.less';
 
+import { toJS } from 'mobx';
 import { ComponentType } from 'react';
 
 import { Button, Image, Input, Map, Text, Video, View } from '@tarojs/components';
 import { inject, observer } from '@tarojs/mobx';
 import Taro, { Component, Config } from '@tarojs/taro';
 
+import Tips from '../../components/tips/tips';
+import { IReplyStore, IVideoDetailStore } from '../../store/interface';
+
 type PageStateProps = {
-  replyStore: {
-    reply: string;
-    changeInput: Function;
-  }
+  replyStore: IReplyStore;
+  videoDetailStore: IVideoDetailStore,
 }
 
 interface Reply {
   props: PageStateProps;
 }
 
-@inject('replyStore')
+@inject('replyStore','videoDetailStore')
 @observer
 class Reply extends Component {
 
@@ -32,8 +34,10 @@ class Reply extends Component {
     console.log('componentWillReact')
   }
 
-  componentDidMount() {
-
+  async componentDidMount() {
+    const { replyStore } = this.props;
+    const params = this.$router.params;
+    await replyStore.init(params);
   }
 
   componentWillUnmount() { }
@@ -43,8 +47,16 @@ class Reply extends Component {
   componentDidHide() { }
 
   render() {
-    const { replyStore } = this.props;
-    const { reply } = replyStore;
+    const { replyStore, videoDetailStore } = this.props;
+    const { reply, num, replyDetail, replyList } = replyStore;
+    const { commentDetail } = videoDetailStore;
+
+    const tipData = {
+      icon: require("../../assets/images/empty.png"),
+      title: '',
+      des: ['快来抢沙发吧']
+    };
+
     return (
       <View className="reply">
         <View className="header">
@@ -52,18 +64,18 @@ class Reply extends Component {
             <Image
               className="headImg"
               mode="widthFix"
-              src={require("../../assets/images/avatar.png")}
+              src={ commentDetail && commentDetail.user && commentDetail.user.logo?commentDetail.user.logo:require("../../assets/images/avatar.png")}
             />
             <View className="detail">
               <View className="name">
-                谢敏
+                {commentDetail.user.name}
                 </View>
               <View className="text">
-                一直都想去上海，羡慕～
+                {commentDetail.content}
                 </View>
               <View className="date">
-                <Text>2019-03-21</Text>
-                <Text className="num">13回复</Text>
+                <Text>{commentDetail.time}</Text>
+                <Text className="num">{commentDetail.replys}回复</Text>
               </View>
             </View>
           </View>
@@ -72,68 +84,45 @@ class Reply extends Component {
         <View className="comment">
           <View className="title">
             <Text>全部回复</Text>
-            <Text className="number">121</Text>
+            <Text className="number">{num}</Text>
           </View>
-          <View className="list">
-            <View className="item">
-              <Image
-                className="headImg"
-                mode="widthFix"
-                src={require("../../assets/images/avatar.png")}
-              />
-              <View className="detail">
-                <View className="name">
-                  谢敏
-                </View>
-                <View className="text">
-                  一直都想去上海，羡慕～
-                </View>
-                <View className="date">
-                  <Text>2019-03-21</Text>
-                  <Text className="num">13回复</Text>
-                </View>
-              </View>
-            </View>
-            <View className="item">
-              <Image
-                className="headImg"
-                mode="widthFix"
-                src={require("../../assets/images/avatar.png")}
-              />
-              <View className="detail">
-                <View className="name">
-                  谢敏
-                </View>
-                <View className="text">
-                  一直都想去上海，羡慕～
-                </View>
-                <View className="date">
-                  <Text>2019-03-21</Text>
-                  <Text className="num">13回复</Text>
-                </View>
-              </View>
-            </View>
-            <View className="item">
-              <Image
-                className="headImg"
-                mode="widthFix"
-                src={require("../../assets/images/avatar.png")}
-              />
-              <View className="detail">
-                <View className="name">
-                  谢敏
-                </View>
-                <View className="text">
-                  语雀是一款优雅高效的在线文档编辑与协同工具， 让每个企业轻松拥有文档中心阿里巴巴集团内部使用多年，众多中小企业首选。
-                </View>
-                <View className="date">
-                  <Text>2019-03-21</Text>
-                  <Text className="num">13回复</Text>
-                </View>
-              </View>
-            </View>
 
-          </View>
+
+          {
+            toJS(replyList).length > 0 ? (
+              <View className="list">
+                {
+                  toJS(replyList).map((item) => {
+                    return (
+                      <View className="item" key={item.id}>
+                        <Image
+                          className="headImg"
+                          mode="widthFix"
+                          src={item.user.logo?item.user.logo:require("../../assets/images/avatar.png")}
+                        />
+                        <View className="detail">
+                          <View className="name">
+                            {item.user.name}
+                          </View>
+                          <View className="text">
+                            {item.content}
+                          </View>
+                          <View className="date">
+                            <Text>{item.time}</Text>
+                            {/* <Text className="num">{item.replys}回复</Text> */}
+                          </View>
+                        </View>
+                      </View>
+                    )
+                  })
+                }
+              </View>
+            ) : (
+                <View style={{ "marginTop": "100px" }}>
+                  <Tips data={tipData} />
+                </View>
+              )
+          }
         </View>
 
         <View className="footer">
@@ -145,8 +134,11 @@ class Reply extends Component {
             value={reply}
             onInput={(event) => replyStore.changeInput(event)}
           />
-          <Button className="btn"
-            disabled={!reply} >
+          <Button
+            onClick={() => replyStore.addReply()}
+            className="btn"
+            // disabled={!reply} 
+          >
             回复
           </Button>
         </View>

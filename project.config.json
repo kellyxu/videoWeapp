@@ -28,7 +28,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 4,
+			"current": 5,
 			"list": [
 				{
 					"id": -1,
@@ -61,10 +61,10 @@
 					"query": "id=1"
 				},
 				{
-					"id": -1,
+					"id": 5,
 					"name": "回复",
 					"pathName": "pages/video/reply",
-					"query": ""
+					"query": "id=33"
 				},
 				{
 					"id": -1,

@@ -3,6 +3,7 @@ import { observable, runInAction } from 'mobx';
 import Taro, { Component } from '@tarojs/taro';
 
 import { getArea, getConfig, getOpenId } from '../services/service';
+import { IArea } from './interface';
 
 const commonStore = observable({
   logo: "",
@@ -17,7 +18,10 @@ const commonStore = observable({
   },
   windowWidth: 0,
   windowHeight: 0,
-  areaRange: [],
+  area: [],
+  get areaRange ():Array<IArea> {
+    return this.area;
+  },
   async init() {
     this.getSystemInfo();
     await this.getUserInfo();
@@ -58,7 +62,7 @@ const commonStore = observable({
   },
   async getArea() {
     const { data } = await getArea();
-    this.areaRange = data;
+    this.area = data;
   }
 
 })

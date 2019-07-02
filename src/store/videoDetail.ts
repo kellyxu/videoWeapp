@@ -12,6 +12,7 @@ const videoDetailStore = observable({
   num: 0,
   page: 1,
   commentList: [],
+  commentDetail: {},
   async init(params) {
     this.detailId = params.id;
     await this.getVideoComments();
@@ -45,12 +46,12 @@ const videoDetailStore = observable({
     });
     if(res.status === "success") {
       Taro.showToast({
-        title: "评论成功",
+        title: "评论成功，请等待审核",
         duration: 2000,
         icon: "none"
       });
-      await this.getVideoComments();
-      await this.getVideoDetai();
+      // await this.getVideoComments();
+      // await this.getVideoDetai();
     } else {
       Taro.showToast({
         title: "评论失败，请稍后再试！",
@@ -60,8 +61,9 @@ const videoDetailStore = observable({
     }
   },
   goComentDetail(item) {
-    Taro.redirectTo({
-      url: `/pages/reply?id=${item.id}`
+    this.commentDetail = item;
+    Taro.navigateTo({
+      url: `/pages/video/reply?id=${item.id}`
     })
   }
 })

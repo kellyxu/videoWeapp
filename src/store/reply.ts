@@ -1,14 +1,54 @@
 import { observable } from 'mobx';
 
+import Taro from '@tarojs/taro';
+
+import { addReply, getReplyList } from '../services/service';
+import commonStore from './common';
+
 const replyStore = observable({
+  replyId: 0,
   comment: "",
-  async init() {
-  
-     
+  page: 1,
+  num: 0,
+  replyDetail:{},
+  replyList:[],
+  async init(params) {
+    this.replyId = params.id;
+    await this.getReplyList();
   },
   changeInput(e) {
     const value = e.detail.value;
     this.comment = value;
-  }
+  },
+  async getReplyList() {
+    const {data} = await getReplyList({
+      id: this.replyId,
+      page: this.page
+    });
+    this.replyList = data.list;
+    this.num = data.num;
+    console.log('getReplyList',data)
+  },
+  async addReply() {
+    const res = await addReply({
+      uid: commonStore.user.uid,
+      content: this.comment,
+      cid: this.replyId,
+    });
+    if(res.status === "success") {
+      Taro.showToast({
+        title: "回复成功，请等待审核",
+        duration: 2000,
+        icon: "none"
+      });
+      // await this.getReplyList();
+    } else {
+      Taro.showToast({
+        title: "回复失败，请稍后再试！",
+        duration: 2000,
+        icon: "none"
+      });
+    }
+  },
 })
 export default replyStore

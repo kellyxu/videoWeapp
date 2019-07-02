@@ -57,7 +57,7 @@ export const getVideoDetail = params =>
  
  
 /**
- * 视频评论列表
+ * 评论列表
  * @param {page,id} params
  */
 export const getVideoComments = params =>  
@@ -69,6 +69,20 @@ export const getVideoComments = params =>
  */
 export const addComment = params =>  
   http.get("addComment", params);
+
+/**
+ * 回复列表
+ * @param {page,id} params
+ */
+export const getReplyList = params =>  
+  http.get("replys", params);
+ 
+/**
+ * 添加回复
+ * @param {uid,content,cid} params
+ */
+export const addReply = params =>  
+  http.get("addReply", params);
  
 /**
  * 我的视频

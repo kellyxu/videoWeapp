@@ -1,10 +1,24 @@
+export interface IAreaItem {
+  childAreas?: Array<any>;
+  id: string;
+  parent: string;
+  name: string;
+  plot_num: string;
+}
+export interface IArea {
+  childAreas: Array<IAreaItem>;
+  id: string;
+  parent: string;
+  name: string;
+  plot_num: string;
+}
 export interface  ICommontStore {
   logo: string;
   name: string;
   text: string;
   wxUserInfo: any;
   user: any;
-  areaRange: Array<any>;
+  areaRange: IArea;
   init: Function;
   getSystemInfo: Function;
   setData: Function;
@@ -15,6 +29,7 @@ export interface  IVideoDetailStore {
   comment: string;
   num: number;
   commentList: Array<any>;
+  commentDetail: any;
   init: Function;
   changeInput: Function;
   addVideoComment: Function;
@@ -35,13 +50,28 @@ export interface IAddVideoStore {
   infoLen: string;
   videoSrc: string;
   selectIndex: any;
-  positionName: Array<any>;
+  multiArray: Array<any>;
+  multiIndex: any;
+  isLocation: Boolean;
+  locationId: any;
+  locationName: string;
+  location: any;
   provinces: Array<any>;
-  citys: Array<any>;
-  streets: Array<any>;
   init: Function;
   getLocation: Function;
   changeInput: Function;
   changeVideo: Function;
   regionChange: Function;
+  regionColumnChange: Function;
+  addVideo: Function;
+}
+
+export interface IReplyStore {
+  reply: string;
+  num: string,
+  replyDetail:any,
+  replyList:Array<any>;
+  init: Function;
+  changeInput: Function;
+  addReply: Function;
 }

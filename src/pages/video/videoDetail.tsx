@@ -123,12 +123,13 @@ class VideoDeatil extends Component {
               <View className="list">
                 {
                   toJS(commentList).map((item) => {
+                    console.log('item.user',item.user)
                     return (
                       <View className="item" key={item.id} onClick={()=>videoDetailStore.goComentDetail(item)}>
                         <Image
                           className="headImg"
                           mode="widthFix"
-                          src={require("../../assets/images/avatar.png")}
+                          src={item.user.logo?item.user.logo:require("../../assets/images/avatar.png")}
                         />
                         <View className="detail">
                           <View className="name">

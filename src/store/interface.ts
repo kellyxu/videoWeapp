@@ -1,3 +1,5 @@
+import { marker } from '@tarojs/components/types/Map';
+
 export interface IAreaItem {
   childAreas?: Array<any>;
   id: string;
@@ -73,4 +75,31 @@ export interface IReplyStore {
   init: Function;
   changeInput: Function;
   addReply: Function;
+}
+
+export interface IRegisterStore {
+  mobile: string,
+  validate: string,
+  name: string,
+  btnText: string,
+  changeInput: Function,
+  getValidate: Function,
+  goIndex: Function,
+}
+
+export interface IIndexStore {
+  longitude: number;
+  latitude: number;
+  type: string;
+  markers: Array<marker>;
+  polyline: Array<any>;
+  controls: Array<any>;
+  circles: Array<any>;
+  scale: number;
+  init: Function;
+  getMapList: Function;
+  changeLocation: Function;
+  setScale: Function;
+  setlocation: Function;
+  handleClickCallout: Function;
 }

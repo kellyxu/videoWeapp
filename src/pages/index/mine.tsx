@@ -1,5 +1,6 @@
 import './mine.less';
 
+import { toJS } from 'mobx';
 import { ComponentType } from 'react';
 
 import { Image, Text, View } from '@tarojs/components';
@@ -62,16 +63,18 @@ class Mine extends Component {
             mode="widthFix"
             src={user && user.logo ? user.logo : require("../../assets/images/avatar.png")}
           />
-          <Text className="name">{name}</Text>
+          <Text className="name">{user.name}</Text>
           <Text className="text">{text}</Text>
-          
+
         </View>
-        <Image
+
+        <View>
+          <Image
             className="bolang"
             mode="widthFix"
             src={require("../../assets/images/bolang.png")}
           />
-        
+        </View>
 
         <View className="content">
           <View className="tabHeader">
@@ -87,93 +90,58 @@ class Mine extends Component {
             }
           </View>
           {
-            list.length > 0 ? (<View className="list">
-              <View className="item">
-                <Image
-                  className="boxLeft"
-                  mode="widthFix"
-                  src={require("../../assets/images/avatar.png")}
-                />
-                <View className="boxRight">
-                  <View className="header">
-                    <View className="title">表演长沙不错吧撒的不三大</View>
-                    <View className="btnBox">
+            toJS(list).length > 0 ? (<View className="list">
+              {
+                toJS(list).map((item) => {
+                  return (
+                    <View className="item">
                       <Image
-                        className="editIcon"
+                        className="boxLeft"
                         mode="widthFix"
-                        src={require("../../assets/images/edit.png")}
+                        src={item.img}
                       />
-                      <Text className="btn">编辑</Text>
+                      <View className="boxRight">
+                        <View className="header">
+                          <View className="title">{item.title}</View>
+                          <View className="btnBox">
+                            <Image
+                              className="editIcon"
+                              mode="widthFix"
+                              src={require("../../assets/images/edit.png")}
+                            />
+                            <Text className="btn">编辑</Text>
+                          </View>
+                        </View>
+                        <View className="positionBox">
+                          <View className="right">
+                            <Image
+                              className="icon"
+                              mode="widthFix"
+                              src={require("../../assets/images/position_icon.png")}
+                            />
+                            <Text className="">{item.province}-{item.street}-{item.city}</Text>
+                          </View>
+                          <View className="left">
+                            <Image
+                              className="icon"
+                              mode="widthFix"
+                              src={require("../../assets/images/date_icon.png")}
+                            />
+                            <Text className="">{item.time}</Text>
+                          </View>
+                        </View>
+                        <View className="videoNumber">
+                          播放量
+                          <Text className="number">{item.hits}</Text>
+                        </View>
+                      </View>
                     </View>
-                  </View>
-                  <View className="positionBox">
-                    <View className="right">
-                      <Image
-                        className="icon"
-                        mode="widthFix"
-                        src={require("../../assets/images/edit.png")}
-                      />
-                      <Text className="">上海-青浦</Text>
-                    </View>
-                    <View className="left">
-                      <Image
-                        className="icon"
-                        mode="widthFix"
-                        src={require("../../assets/images/edit.png")}
-                      />
-                      <Text className="">昨天</Text>
-                    </View>
-                  </View>
-                  <View className="videoNumber">
-                    播放量
-                  <Text className="number">1207</Text>
-                  </View>
-                </View>
-              </View>
-              <View className="item">
-                <Image
-                  className="boxLeft"
-                  mode="widthFix"
-                  src={require("../../assets/images/avatar.png")}
-                />
-                <View className="boxRight">
-                  <View className="header">
-                    <View className="title">表演长沙不错吧撒的不三大</View>
-                    <View className="btnBox">
-                      <Image
-                        className="editIcon"
-                        mode="widthFix"
-                        src={require("../../assets/images/edit.png")}
-                      />
-                      <Text className="btn">编辑</Text>
-                    </View>
-                  </View>
-                  <View className="positionBox">
-                    <View className="right">
-                      <Image
-                        className="icon"
-                        mode="widthFix"
-                        src={require("../../assets/images/edit.png")}
-                      />
-                      <Text className="">上海-青浦</Text>
-                    </View>
-                    <View className="left">
-                      <Image
-                        className="icon"
-                        mode="widthFix"
-                        src={require("../../assets/images/edit.png")}
-                      />
-                      <Text className="">昨天</Text>
-                    </View>
-                  </View>
-                  <View className="videoNumber">
-                    播放量
-                  <Text className="number">1207</Text>
-                  </View>
-                </View>
-              </View>
+                  )
+                })
+              }
+
             </View>
-            ) : (<Tips data={tipData} />)
+            ) : (<View style={{ "marginTop": "100px" }}><Tips data={tipData} /></View>)
           }
         </View>
 

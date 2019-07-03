@@ -2,7 +2,7 @@ import { observable } from 'mobx';
 
 import Taro from '@tarojs/taro';
 
-import { setUser } from '../services/service';
+import { checkCode, sendSmsCode, setUser } from '../services/service';
 import commonStore from '../store/common';
 
 const registerStore = observable({
@@ -40,8 +40,8 @@ const registerStore = observable({
       duration: 2000
     });
   },
-  sendSmsCode() {
-    // await sendSmsCode({mobile: this.mobile});
+  async sendSmsCode() {
+    await sendSmsCode({phone: this.mobile});
     this.canGet = false;
     this.countDown();
   },
@@ -64,19 +64,32 @@ const registerStore = observable({
     const {userInfo} = e.detail;
     await commonStore.setData('wxUserInfo',userInfo);
     if (userInfo) {
-      Taro.showLoading({mask: true, title: "注册中..."});
-      const res = await setUser({
-        name: this.name,
+      const checkCodeRes = await checkCode({
         phone: this.mobile,
-        openid: commonStore.user.openid,
-        logo: userInfo.avatarUrl,
+        code: this.validate
       });
-      Taro.hideLoading();
-      if(res.status === "success") {
-        Taro.reLaunch({
-          url: '/pages/index/index'
+      if(checkCodeRes.status === "success") {
+        Taro.showLoading({mask: true, title: "注册中..."});
+        const res = await setUser({
+          name: this.name,
+          phone: this.mobile,
+          openid: commonStore.user.openid,
+          logo: userInfo.avatarUrl,
+        });
+        Taro.hideLoading();
+        if(res.status === "success") {
+          Taro.reLaunch({
+            url: '/pages/index/index'
+          })
+        }
+      } else {
+        Taro.showToast({
+          title: "验证码错误！",
+          duration: 2000,
+          icon: "none"
         })
       }
+      
     } else {
       Taro.showToast({
         title: "用户信息获取失败！",

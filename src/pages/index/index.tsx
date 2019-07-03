@@ -2,6 +2,7 @@ import './index.less';
 
 import { observable, toJS } from 'mobx';
 import { ComponentType } from 'react';
+import { ICommontStore, IIndexStore } from 'src/store/interface';
 
 import { Button, CoverImage, CoverView, Map, Text, View } from '@tarojs/components';
 import { marker } from '@tarojs/components/types/Map';
@@ -11,25 +12,8 @@ import Taro, { Component, Config, MapContext } from '@tarojs/taro';
 import TabBar from '../../components/tabBar/tabBar';
 
 type PageStateProps = {
-  indexStore: {
-    longitude: number;
-    latitude: number;
-    type: string;
-    markers: Array<marker>;
-    polyline: Array<any>;
-    controls: Array<any>;
-    circles: Array<any>;
-    scale: number;
-    init: Function;
-    getMapList: Function;
-    changeLocation: Function;
-    setlocation: Function;
-    handleClickCallout: Function;
-  },
-  commonStore: {
-    init: Function;
-    getUserInfo: Function;
-  },
+  indexStore: IIndexStore,
+  commonStore: ICommontStore,
 }
 
 interface Index {
@@ -76,7 +60,7 @@ class Index extends Component {
     this.onRegionChange();
   }
 
-  componentDidShow() { }
+  componentDidShow() {this.getCenterLocation(); }
 
   componentDidHide() { }
 
@@ -85,9 +69,10 @@ class Index extends Component {
     const { indexStore } = this.props;
     this.state.mapCtx.getCenterLocation({
       success: async (res) => {
+        console.log('获取中心点', res)
         this.getRegion();
+        this.getScale();
         indexStore.setlocation(res.latitude,res.longitude)
-        console.log('getCenterLocation', res)
       },
       fail: (e) => {
         console.log('error',e)
@@ -100,7 +85,22 @@ class Index extends Component {
     const { indexStore } = this.props;
     this.state.mapCtx.getRegion({
       success: async (res) => {
+        console.log('获取对角线',res)
         await indexStore.getMapList(res.northeast, res.southwest);
+      },
+      fail: (e) => {
+        console.log('error',e)
+      },
+    })
+  }
+
+   // 获取层级
+   getScale() {
+    const { indexStore } = this.props;
+    this.state.mapCtx.getScale({
+      success: async (res) => {
+        console.log('获取层级',res)
+        await indexStore.setScale(res.scale);
       },
       fail: (e) => {
         console.log('error',e)

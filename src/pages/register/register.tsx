@@ -6,16 +6,11 @@ import { Button, Image, Input, Text, View } from '@tarojs/components';
 import { inject, observer } from '@tarojs/mobx';
 import Taro, { Component, Config } from '@tarojs/taro';
 
+import { ICommontStore, IRegisterStore } from '../../store/interface';
+
 type PageStateProps = {
-  registerStore: {
-    mobile: string,
-    validate: string,
-    name: string,
-    btnText: string,
-    changeInput: Function,
-    getValidate: Function,
-    goIndex: Function,
-  }
+  registerStore: IRegisterStore,
+  commonStore: ICommontStore;
 }
 
 interface Register {
@@ -23,7 +18,7 @@ interface Register {
 }
 
 
-@inject('registerStore')
+@inject('registerStore','commonStore')
 @observer
 class Register extends Component {
 
@@ -47,15 +42,16 @@ class Register extends Component {
 
 
   render() {
-    const { registerStore } = this.props;
+    const { registerStore,commonStore } = this.props;
     const { mobile, validate, name, btnText } = registerStore;
+    const { logo } = commonStore;
     return (
       <View className='register'>
         <View className="main">
           <Image
             className="logo"
             mode="widthFix"
-            src={require("../../assets/images/logo.png")}
+            src={logo}
           />
           <View className="item">
             <View className="inputBox">

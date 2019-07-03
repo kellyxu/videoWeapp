@@ -34,9 +34,7 @@ class AddVideo extends Component {
   };
 
   componentWillMount() {
-    Taro.hideTabBar({
-
-    })
+    Taro.hideTabBar()
   }
 
   componentWillReact() { }
@@ -51,7 +49,9 @@ class AddVideo extends Component {
 
   componentDidShow() { }
 
-  componentDidHide() { }
+  componentDidHide() { 
+    Taro.showTabBar();
+  }
 
   render() {
     const { addVideoStore, commonStore } = this.props;

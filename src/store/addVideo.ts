@@ -32,6 +32,7 @@ const addVideoStore = observable({
     return id;
   },
   get locationName() {
+    console.log('1111',this.provinces,this.selectIndex)
     let name = "";
     if(this.provinces && this.selectIndex && this.selectIndex.length > 0) {
       name = `${this.provinces[0][this.selectIndex[0]].name}，${this.provinces[1][this.selectIndex[1]].name}，${this.provinces[2][this.selectIndex[2]].name}`;
@@ -128,19 +129,6 @@ const addVideoStore = observable({
       url: this.videoSrc,
       uid: commonStore.user.uid,
     };
-    
-    let arr:any = Reflect.ownKeys(params).map((key:any)=>{
-      let name =  `data[${key}]`;
-      return {
-        [name]: params[key],
-      }
-    })
-    var obj={ };
-
-  arr.map( ( item)=> {
-    obj = Object.assign(obj, item)
-  });
-      console.log(params,arr,obj)
     if(!params.title || !params.descp || !params.url || !params.map_lng && !params.province) {
       Taro.showToast({
         title: "请先完善信息！",
@@ -148,8 +136,23 @@ const addVideoStore = observable({
         icon: "none"
       });
     } else {
-      
       const res = await addVideo(params);
+      if(res.status === "success") {
+        await Taro.showToast({
+          title: "发布成功，待审核！",
+          duration: 2000,
+          icon: "none"
+        });
+        Taro.reLaunch({
+          url: "/pages/index/index"
+        })
+      } else {
+        Taro.showToast({
+          title: "发布失败，请稍后再试！",
+          duration: 2000,
+          icon: "none"
+        });
+      }
       console.log('save', res)
     }
     

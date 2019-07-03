@@ -105,5 +105,19 @@ http.post("addVideo", params);
 export const getArea = () =>  
   http.get("area");
 
+/**
+ * 获取验证码
+ * @param {} 
+ */
+export const sendSmsCode = params =>  
+  http.get("addOne", params);
+
+/**
+ * 校验验证码
+ * @param {} 
+ */
+export const checkCode = params =>  
+  http.get("checkCode", params);
+
  
 

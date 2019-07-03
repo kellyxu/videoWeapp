@@ -7,7 +7,6 @@ import { IArea } from './interface';
 
 const commonStore = observable({
   logo: "",
-  name: "名字",
   text: "",
   wxUserInfo: {},
   user: {

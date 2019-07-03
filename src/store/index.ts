@@ -8,11 +8,11 @@ import commonStore from './common';
 const indexStore = observable({
   latitude: 0,
   longitude: 0,
-  type: "province",
   aid: "",
   scale: 8,
   isCallout: false, // 点击气泡
   list: [],
+  goVideoParams:{},
   get markers() {
     const markers = this.list.map((value, index) => {
       return {
@@ -33,13 +33,26 @@ const indexStore = observable({
     });
     return markers || [];
   },
+  get type() {
+    let type = "province";
+    if(this.scale <=8) {
+      type = "province"
+    } else if(this.scale <=10) {
+      type = "city";
+    } else if(this.scale <=12) {
+      type = "street";
+    } else if(this.scale <=14) {
+      type = "video";
+    }
+    return type;
+  },
   async init() {
     await this.getLocation();
     this.iconLeft = commonStore.windowWidth / 2;
     this.iconTop = commonStore.windowHeight / 2;
     this.controls = [{
       id: "1",
-      iconPath: require("../assets/images/edit.png"),
+      iconPath: require("../assets/images/center_icon.png"),
       position: {
         left: `${this.iconLeft - 10}`,
         top: `${this.iconTop - 10}`,
@@ -53,8 +66,10 @@ const indexStore = observable({
       const location = await Taro.getLocation({
         type: 'wgs84',
       });
-      this.setlocation(location.latitude, location.longitude)
+      this.setlocation(location.latitude, location.longitude);
     } catch (res) {
+      this.setlocation("31.772752","119.946973");
+      console.log('定位',res)
       Taro.showToast({
         title: "定位失败！",
         duration: 2000,
@@ -63,42 +78,21 @@ const indexStore = observable({
     }
   },
   async getMapList(northeast, southwest) {
-
+    let params = {
+      maxlat: northeast.latitude,
+      minlat: southwest.latitude,
+      maxlng: northeast.longitude,
+      minlng: southwest.longitude,
+      type: this.type,
+      aid: this.aid && this.isCallout ? this.aid : "",
+    };
     runInAction(async() => {
-      if (this.isCallout && this.type === "province") {
-        this.type = "city";
-        this.scale = 10;
-        this.isCallout = false;
-      } else if (this.isCallout && this.type === "city") {
-        this.type = "street";
-        this.scale = 12;
-        this.isCallout = false;
-      } else if(this.isCallout && this.type === "street") {
-        this.type = "video";
-        this.scale = 14;
-        this.isCallout = false;
-      } else if(this.isCallout && this.type === "video") {
-        console.log('进入详情',this.aid)
-        Taro.navigateTo({
-          url: `/pages/video/videoDetail?id=${this.aid}`
-        });
+      const { data = [] } = await getMapList(params);
+      this.list = data;
+      this.isCallout = false;
+      if(params.type === "video") {
+        this.goVideoParams = params;
       }
-
-      const { data = [] } = await getMapList({
-        maxlat: northeast.latitude,
-        minlat: southwest.latitude,
-        maxlng: northeast.longitude,
-        minlng: southwest.longitude,
-        type: this.type,
-        aid: this.aid ? this.aid : "",
-      });
-
-      if (data.length > 0) {
-        this.list = data;
-      } else {
-        this.list = [];
-      }
-      
     })
   },
   setlocation(latitude, longitude) {
@@ -106,12 +100,27 @@ const indexStore = observable({
     this.latitude = latitude;
     this.longitude = longitude;
   },
+  setScale(scale) {
+    this.scale = scale;
+  },
   // 点击气泡
   handleClickCallout(index) {
     this.isCallout = true;
     const data = this.list[index];
     this.aid = data.id;
-    this.setlocation(data.map_lat, data.map_lng)
+    this.setlocation(data.map_lat, data.map_lng);
+    if (this.isCallout && this.type === "province") {
+      this.scale = 10;
+    } else if (this.isCallout && this.type === "city") {
+      this.scale = 12;
+    } else if(this.isCallout && this.type === "street") {
+      this.scale = 14;
+    } else if(this.isCallout && this.type === "video") {
+      console.log('进入详情',this.aid)
+      Taro.navigateTo({
+        url: `/pages/video/videoDetail?id=${this.aid}`
+      });
+    }
   }
 
 })

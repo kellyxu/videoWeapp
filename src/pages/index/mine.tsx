@@ -68,7 +68,7 @@ class Mine extends Component {
 
         </View>
 
-        <View>
+        <View style={{"background":"#4384FE"}}>
           <Image
             className="bolang"
             mode="widthFix"

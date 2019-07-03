@@ -9,7 +9,7 @@ const indexStore = observable({
   latitude: 0,
   longitude: 0,
   aid: "",
-  scale: 8,
+  scale: 7,
   isCallout: false, // 点击气泡
   list: [],
   goVideoParams:{},
@@ -38,13 +38,13 @@ const indexStore = observable({
   },
   get type() {
     let type = "province";
-    if(this.scale <=8) {
+    if(this.scale <=7) {
       type = "province"
     } else if(this.scale <=10) {
       type = "city";
     } else if(this.scale <=12) {
       type = "street";
-    } else if(this.scale <=14) {
+    } else {
       type = "video";
     }
     return type;

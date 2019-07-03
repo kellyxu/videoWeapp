@@ -2,8 +2,21 @@ import { observable, runInAction, toJS } from 'mobx';
 
 import Taro from '@tarojs/taro';
 
-import { addVideo, getVideoDetail } from '../services/service';
+import { addVideo, getQiniuToken, getVideoDetail } from '../services/service';
+import qiniuUploader from '../utils/qiniuUploader';
 import commonStore from './common';
+
+// 初始化七牛相关参数
+function initQiniu(token) {
+  var options = {
+    uptoken: token,
+    region: 'NCN', // 华北区
+    uptokenURL: "",
+    domain: '',
+    shouldUseQiniuFileName: false
+  };
+  qiniuUploader.init(options);
+}
 
 const addVideoStore = observable({
   title: "",
@@ -15,6 +28,7 @@ const addVideoStore = observable({
   citys: [],
   streets: [],
   location: {},
+  qiniuToken: "",
   get titleLen() {
     return `${this.title.length}/20`;
   },
@@ -45,6 +59,7 @@ const addVideoStore = observable({
     this[key] = value;
   },
   async init(params) {
+    
     const areaRange = commonStore.areaRange;
     if (areaRange && areaRange.length > 0) {
       this.provinces = [areaRange, areaRange[0].childAreas, areaRange[0].childAreas[0].childAreas];
@@ -52,7 +67,15 @@ const addVideoStore = observable({
     if(params && params.id) {
       this.videoId = params.id;
       this.getVideoDetail(params.id);
+    } else {
+      this.getQiniuToken();
     }
+  },
+  async getQiniuToken() {
+    const token = await getQiniuToken();
+    this.qiniuToken = token.data;
+    initQiniu(this.qiniuToken);
+    console.log('token',token)
   },
   async changeVideo() {
     try {
@@ -61,6 +84,11 @@ const addVideoStore = observable({
         maxDuration: 60,
       })
       this.videoSrc = res.tempFilePath;
+      qiniuUploader.upload(this.videoSrc, (res) => {
+        console.log('file url is: ' + res)
+      }, (error) => {
+        console.error('error: ' + JSON.stringify(error));
+      })
       console.log('res', res)
     } catch (res) {
       Taro.showToast({
@@ -136,6 +164,7 @@ const addVideoStore = observable({
       descp: this.info,
       url: this.videoSrc,
       uid: commonStore.user.uid,
+      address: this.location.address,
     };
     if(!params.title || !params.descp || !params.url || !params.map_lng && !params.province) {
       Taro.showToast({

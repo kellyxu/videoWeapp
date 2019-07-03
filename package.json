@@ -38,6 +38,8 @@
 		"mobx-react": "^6.1.1",
 		"nerv-devtools": "^1.4.3",
 		"nervjs": "^1.4.3",
+		"qiniu": "^7.2.2",
+		"qiniu-js": "^2.5.4",
 		"react-dom": "^16.8.6",
 		"regenerator-runtime": "^0.13.2"
 	},

@@ -3,8 +3,8 @@ module.exports = {
     NODE_ENV: '"development"'
   },
   defineConstants: {
-    WEAPP_API_PREFIX: "https://ychvideo.madridwine.cn/api/index/",
-    AUTH_API_PREFIX: "https://ychvideo.madridwine.cn/api/index/",
+    WEAPP_API_PREFIX: "https://ychvideo.madridwine.cn/api/",
+    AUTH_API_PREFIX: "https://ychvideo.madridwine.cn/api/",
   },
   weapp: {},
   h5: {}

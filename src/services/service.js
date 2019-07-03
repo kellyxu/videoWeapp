@@ -46,7 +46,7 @@ export const setUser = params =>
  * @param {name,openid,phone,logo} params
  */
 export const getMapList = params =>  
-  http.get("lindex/ist", params);
+  http.get("index/list", params);
  
 /**
  * 视频详情

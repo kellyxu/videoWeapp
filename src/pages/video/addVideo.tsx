@@ -83,7 +83,7 @@ class AddVideo extends Component {
                   <Image
                     className="icon"
                     mode="widthFix"
-                    src={require("../../assets/images/avatar.png")}
+                    src={require("../../assets/images/select_video.jpg")}
                     onClick={async () => await addVideoStore.changeVideo()}
                   />
                 </View>

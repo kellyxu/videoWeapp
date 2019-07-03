@@ -10,7 +10,7 @@ import commonStore from './common';
 function initQiniu(token) {
   var options = {
     uptoken: token,
-    region: 'NCN', // 华北区
+    region: 'ECN', // 华北区
     uptokenURL: "",
     domain: '',
     shouldUseQiniuFileName: false
@@ -22,6 +22,7 @@ const addVideoStore = observable({
   title: "",
   info: "",
   videoSrc: "",
+  videoKey: "",
   videoId: "",
   selectIndex: [0, 0, 0],
   provinces: [],
@@ -79,17 +80,17 @@ const addVideoStore = observable({
   },
   async changeVideo() {
     try {
-      const res = await Taro.chooseVideo({
+      const chooseRes = await Taro.chooseVideo({
         sourceType: ['album', 'camera'],
         maxDuration: 60,
       })
-      this.videoSrc = res.tempFilePath;
-      qiniuUploader.upload(this.videoSrc, (res) => {
-        console.log('file url is: ' + res)
+      this.videoSrc = chooseRes.tempFilePath;
+      qiniuUploader.upload(chooseRes.tempFilePath, (res) => {
+        this.videoKey = res.key;
+        console.log('file url is: ' , res)
       }, (error) => {
         console.error('error: ' + JSON.stringify(error));
       })
-      console.log('res', res)
     } catch (res) {
       Taro.showToast({
         title: '视频上传失败！',
@@ -162,7 +163,7 @@ const addVideoStore = observable({
       id: this.videoId?this.videoId:"",
       title: this.title,
       descp: this.info,
-      url: this.videoSrc,
+      url: this.videoKey,
       uid: commonStore.user.uid,
       address: this.location.address,
     };

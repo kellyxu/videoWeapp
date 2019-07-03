@@ -21,11 +21,16 @@ interface PageStateProps {
 @observer
 class Tips extends Component<PageStateProps> {
   static defaultProps = {
-    data: {}
+    data: {
+      icon: require("../../assets/images/empty.png"),
+      title: '',
+      des: ['暂无数据']
+    }
   };
 
   render() {
     const { icon, title, des, styles } = this.props.data;
+    console.log('tips',this.props)
     return (
       <View className="tips" style={styles}>
         {

@@ -2,13 +2,14 @@ import { observable, runInAction, toJS } from 'mobx';
 
 import Taro from '@tarojs/taro';
 
-import { addVideo } from '../services/service';
+import { addVideo, getVideoDetail } from '../services/service';
 import commonStore from './common';
 
 const addVideoStore = observable({
   title: "",
   info: "",
   videoSrc: "",
+  videoId: "",
   selectIndex: [0, 0, 0],
   provinces: [],
   citys: [],
@@ -32,7 +33,6 @@ const addVideoStore = observable({
     return id;
   },
   get locationName() {
-    console.log('1111',this.provinces,this.selectIndex)
     let name = "";
     if(this.provinces && this.selectIndex && this.selectIndex.length > 0) {
       name = `${this.provinces[0][this.selectIndex[0]].name}，${this.provinces[1][this.selectIndex[1]].name}，${this.provinces[2][this.selectIndex[2]].name}`;
@@ -44,10 +44,14 @@ const addVideoStore = observable({
     console.log(this[key], value)
     this[key] = value;
   },
-  async init() {
+  async init(params) {
     const areaRange = commonStore.areaRange;
     if (areaRange && areaRange.length > 0) {
-    this.provinces = [areaRange, areaRange[0].childAreas, areaRange[0].childAreas[0].childAreas];
+      this.provinces = [areaRange, areaRange[0].childAreas, areaRange[0].childAreas[0].childAreas];
+    }
+    if(params && params.id) {
+      this.videoId = params.id;
+      this.getVideoDetail(params.id);
     }
   },
   async changeVideo() {
@@ -70,6 +74,9 @@ const addVideoStore = observable({
 
   },
   async getLocation() {
+    if(this.videoId) {
+      return ;
+    } 
     try {
       await Taro.getLocation({
         type: 'gcj02',
@@ -91,6 +98,7 @@ const addVideoStore = observable({
   },
 
   regionColumnChange(e) {
+    this.isDefault = false;
     const detail = e.detail;
     const { value, column } = detail;
     //如果更新的是第一列“省”，第二列“市”和第三列“区”的数组下标置为0
@@ -123,7 +131,7 @@ const addVideoStore = observable({
       ...this.locationId,
       map_lng: this.location.longitude,
       map_lat: this.location.latitude,
-      id: "",
+      id: this.videoId?this.videoId:"",
       title: this.title,
       descp: this.info,
       url: this.videoSrc,
@@ -143,9 +151,12 @@ const addVideoStore = observable({
           duration: 2000,
           icon: "none"
         });
-        Taro.reLaunch({
-          url: "/pages/index/index"
-        })
+        setTimeout(() => {
+          Taro.reLaunch({
+            url: "/pages/index/index"
+          })
+        }, 1000);
+        
       } else {
         Taro.showToast({
           title: "发布失败，请稍后再试！",
@@ -157,6 +168,22 @@ const addVideoStore = observable({
     }
     
     
+  },
+
+  async getVideoDetail(id) {
+    const {data} = await getVideoDetail({
+      id
+    });
+    runInAction(()=>{
+      this.title = data.title;
+      this.content = data.content;
+      this.info = data.content;
+      this.videoSrc = data.url;
+      this.location = {
+        name: data.adress
+      }
+    })
+    console.log('detail',data)
   }
 
 })

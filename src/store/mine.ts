@@ -34,6 +34,7 @@ const mineStore = observable({
   async init() {
     
     setTimeout(async() => {
+      await this.getMyVideoList();
       await this.changeTab(1);
     }, 1000);
     
@@ -66,6 +67,11 @@ const mineStore = observable({
     });
     runInAction(()=>{
       this.list = data.list;
+    })
+  },
+  goVideoDetail(item) {
+    Taro.reLaunch({
+      url: `/pages/video/addVideo?id=${item.id}`
     })
   }
 })

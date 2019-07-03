@@ -19,6 +19,9 @@ const indexStore = observable({
         id: index,
         latitude: value.map_lat,
         longitude: value.map_lng,
+        width: 1,
+        height: 1,
+        iconPath: require("../assets/images/center_icon.png"),
         callout: {
           content: `${value.name}(${value.num})`,
           fontSize: 18,

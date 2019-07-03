@@ -46,8 +46,8 @@ class Mine extends Component {
 
   render() {
     const { mineStore, commonStore } = this.props;
-    const { tab, list } = mineStore;
-    const { user, name, text } = commonStore;
+    const { tab, list, tabActive } = mineStore;
+    const { user, text } = commonStore;
 
     const tipData = {
       icon: require("../../assets/images/empty.png"),
@@ -94,7 +94,7 @@ class Mine extends Component {
               {
                 toJS(list).map((item) => {
                   return (
-                    <View className="item">
+                    <View className="item" key={item.id}>
                       <Image
                         className="boxLeft"
                         mode="widthFix"
@@ -103,14 +103,19 @@ class Mine extends Component {
                       <View className="boxRight">
                         <View className="header">
                           <View className="title">{item.title}</View>
-                          <View className="btnBox">
-                            <Image
-                              className="editIcon"
-                              mode="widthFix"
-                              src={require("../../assets/images/edit.png")}
-                            />
-                            <Text className="btn">编辑</Text>
-                          </View>
+                          {
+                            tabActive === 0 ? (
+                              <View className="btnBox">
+                                <Image
+                                  className="editIcon"
+                                  mode="widthFix"
+                                  src={require("../../assets/images/edit.png")}
+                                />
+                                <Text onClick={() => mineStore.goVideoDetail(item)} className="btn">编辑</Text>
+                              </View>
+                            ) : null
+                          }
+
                         </View>
                         <View className="positionBox">
                           <View className="right">
@@ -130,10 +135,23 @@ class Mine extends Component {
                             <Text className="">{item.time}</Text>
                           </View>
                         </View>
-                        <View className="videoNumber">
-                          播放量
-                          <Text className="number">{item.hits}</Text>
-                        </View>
+                        {
+                          tabActive === 1 ? (
+                            <View className="videoNumber">
+                              播放量
+                              <Text className="number">{item.hits}</Text>
+                            </View>
+                          ) : tabActive === 0 ? (
+                            <View className="checkIng">
+                              审核中
+                            </View>
+                          ) : (
+                            <View className="unCheck">
+                              未通过
+                            </View>
+                          )
+                        }
+
                       </View>
                     </View>
                   )

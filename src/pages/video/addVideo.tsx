@@ -29,7 +29,7 @@ class AddVideo extends Component {
   }
 
   state = {
-    selectIndex: [0,0,0],
+    selectIndex: [0, 0, 0],
     provinces: [],
   };
 
@@ -41,25 +41,27 @@ class AddVideo extends Component {
 
   async componentDidMount() {
     const { addVideoStore, commonStore } = this.props;
-    await addVideoStore.init();
-    
+    const params = this.$router.params;
+    await addVideoStore.init(params);
   }
 
-  componentWillUnmount() { }
-
-  componentDidShow() { }
-
-  componentDidHide() { 
+  componentWillUnmount() { 
+    console.log('componentWillUnmount')
     Taro.showTabBar();
   }
 
+  componentDidShow() { }
+
+  componentDidHide() { }
+
   render() {
     const { addVideoStore, commonStore } = this.props;
-    const { title, titleLen, info, infoLen, videoSrc, selectIndex, provinces, locationName, location } = addVideoStore;
+    const { title, titleLen, info, infoLen, videoId, videoSrc, selectIndex, provinces, locationName, location } = addVideoStore;
     const multiArray = toJS(provinces);
     const multiIndex = toJS(selectIndex);
     console.log('multiArray', multiArray)
     console.log('multiIndex', multiIndex)
+    const locationClass = videoId?"disable":"itemRight";
     return (
       <View className="addVideo">
         <View className="main">
@@ -69,9 +71,13 @@ class AddVideo extends Component {
                 <Video className="myVideo" src={videoSrc}
                   show-center-play-btn enable-danmu controls autoplay={true}
                 ></Video>
-                <View className="update">
-                  <Text onClick={async () => await addVideoStore.changeVideo()}>重新上传</Text>
-                </View>
+                {
+                  !videoId ? (
+                    <View className="update">
+                      <Text onClick={async () => await addVideoStore.changeVideo()}>重新上传</Text>
+                    </View>) : null
+                }
+
               </View>) : (
                 <View className="videoBox">
                   <Image
@@ -109,7 +115,7 @@ class AddVideo extends Component {
               <View className="itemLeft">
                 <View className="location">{location.name}</View>
               </View>
-              <Text className="itemRight" onClick={() => addVideoStore.getLocation()}>获取定位</Text>
+              <Text className={locationClass} onClick={() => addVideoStore.getLocation()}>获取定位</Text>
             </View>
             <View className="item infoBox">
               <Textarea className="itemLeft" value={info}

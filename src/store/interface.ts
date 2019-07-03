@@ -38,11 +38,13 @@ export interface  IVideoDetailStore {
   goComentDetail: Function;
 }
 export interface IMineStore {
+  tabActive: number;
   tab: Array<any>;
   list: Array<any>;
   init: Function;
   getConfig: Function;
   changeTab: Function;
+  goVideoDetail: Function;
 }
 
 export interface IAddVideoStore {
@@ -50,6 +52,7 @@ export interface IAddVideoStore {
   titleLen: string;
   info: string;
   infoLen: string;
+  videoId: string;
   videoSrc: string;
   selectIndex: any;
   multiArray: Array<any>;

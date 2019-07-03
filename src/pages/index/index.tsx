@@ -48,6 +48,13 @@ class Index extends Component {
   componentDidMount() {
     const { indexStore } = this.props;
     indexStore.init();
+  }
+
+  componentWillUnmount() {
+    this.onRegionChange();
+  }
+
+  componentDidShow() {
     const mapCtx = Taro.createMapContext('map');
     this.setState({
       mapCtx
@@ -55,12 +62,6 @@ class Index extends Component {
       this.getCenterLocation();
     })
   }
-
-  componentWillUnmount() {
-    this.onRegionChange();
-  }
-
-  componentDidShow() {this.getCenterLocation(); }
 
   componentDidHide() { }
 

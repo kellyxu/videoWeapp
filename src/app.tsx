@@ -70,12 +70,12 @@ class App extends Component {
           iconPath: "./assets/images/home.png",
           selectedIconPath: "./assets/images/home_active.png"
         },
-        {
-          pagePath: "pages/video/addVideo",
-          text: "",
-          iconPath: "./assets/images/add.png",
-          selectedIconPath: "./assets/images/add_icon.png"
-        },
+        // {
+        //   pagePath: "pages/video/addVideo",
+        //   text: "",
+        //   iconPath: "./assets/images/add.png",
+        //   selectedIconPath: "./assets/images/add_icon.png"
+        // },
         {
           pagePath: "pages/index/mine",
           text: "我的",

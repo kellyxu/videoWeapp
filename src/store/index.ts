@@ -9,7 +9,7 @@ const indexStore = observable({
   latitude: 0,
   longitude: 0,
   aid: "",
-  scale: 7,
+  scale: 14,
   isCallout: false, // 点击气泡
   list: [],
   goVideoParams:{},

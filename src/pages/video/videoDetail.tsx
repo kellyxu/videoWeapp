@@ -3,7 +3,7 @@ import './videoDetail.less';
 import { toJS } from 'mobx';
 import { ComponentType } from 'react';
 
-import { Button, Image, Input, Map, Text, Video, View } from '@tarojs/components';
+import { Button, Image, Input, Map, ScrollView, Text, Video, View } from '@tarojs/components';
 import { inject, observer } from '@tarojs/mobx';
 import Taro, { Component, Config } from '@tarojs/taro';
 
@@ -93,7 +93,7 @@ class VideoDeatil extends Component {
               <Image
                 className="icon"
                 mode="widthFix"
-                src={require("../../assets/images/position_icon.png")}
+                src={require("../../assets/images/hits_icon.png")}
               />
               <Text className="text">{videoDetail.hits}</Text>
             </View>
@@ -120,7 +120,12 @@ class VideoDeatil extends Component {
           </View>
           {
             toJS(commentList).length > 0 ? (
-              <View className="list">
+              <ScrollView style="max-height: 2500px;" className="list"
+                scrollY
+                scrollWithAnimation
+                upperThreshold={100}
+                onScrollToLower={async() => await videoDetailStore.scrollToLower()}
+              >
                 {
                   toJS(commentList).map((item) => {
                     console.log('item.user',item.user)
@@ -148,7 +153,7 @@ class VideoDeatil extends Component {
                   })
                 }
 
-              </View>
+              </ScrollView>
             ) : (<Tips data={tipData} />)
           }
 
@@ -158,7 +163,7 @@ class VideoDeatil extends Component {
           <Input
             className="input"
             type="text"
-            maxLength={11}
+            maxLength={100}
             placeholder="喜欢就发表一下见解吧～"
             value={comment}
             onInput={(event) => videoDetailStore.changeInput(event)}

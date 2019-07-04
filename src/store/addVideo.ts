@@ -30,6 +30,8 @@ const addVideoStore = observable({
   streets: [],
   location: {},
   qiniuToken: "",
+  isDisabledBtn: true,
+  detailPosition:"",
   get titleLen() {
     return `${this.title.length}/20`;
   },
@@ -42,7 +44,7 @@ const addVideoStore = observable({
       id = {
         province: this.provinces[0][this.selectIndex[0]].id,
         city: this.provinces[1][this.selectIndex[1]].id,
-        street: this.provinces[1][this.selectIndex[1]].id,
+        street: this.provinces[2][this.selectIndex[2]].id,
       }
     }
     return id;
@@ -156,6 +158,9 @@ const addVideoStore = observable({
   },
   
   async addVideo() {
+    if(!this.isDisabledBtn) {
+      return;
+    }
     const params = {
       ...this.locationId,
       map_lng: this.location.longitude,
@@ -165,15 +170,17 @@ const addVideoStore = observable({
       descp: this.info,
       url: this.videoKey,
       uid: commonStore.user.uid,
-      address: this.location.address,
+      addr: this.videoId?this.location.name:this.location.address,
     };
-    if(!params.title || !params.descp || !params.url || !params.map_lng && !params.province) {
+    console.log('参数',params)
+    if(!params.title || !params.descp || !params.url || !params.addr || !params.province) {
       Taro.showToast({
         title: "请先完善信息！",
         duration: 2000,
         icon: "none"
       });
     } else {
+      this.isDisabledBtn = false;
       const res = await addVideo(params);
       if(res.status === "success") {
         await Taro.showToast({
@@ -181,23 +188,22 @@ const addVideoStore = observable({
           duration: 2000,
           icon: "none"
         });
+        
         setTimeout(() => {
-          Taro.reLaunch({
-            url: "/pages/index/index"
-          })
+          Taro.navigateBack();
+          this.clear();
+          this.isDisabledBtn = true;
         }, 1000);
         
       } else {
+        this.isDisabledBtn = true;
         Taro.showToast({
           title: "发布失败，请稍后再试！",
           duration: 2000,
           icon: "none"
         });
       }
-      console.log('save', res)
     }
-    
-    
   },
 
   async getVideoDetail(id) {
@@ -209,11 +215,23 @@ const addVideoStore = observable({
       this.content = data.content;
       this.info = data.content;
       this.videoSrc = data.url;
+      this.videoKey = data.url;
       this.location = {
-        name: data.adress
+        name: data.address
       }
+      this.detailPosition = `${data.province}，${data.street}，${data.city}`;
     })
     console.log('detail',data)
+  },
+  clear() {
+    this.location = {};
+    this.title = "";
+    this.videoId = "";
+    this.info = "";
+    this.videoSrc = "";
+    this.videoKey = "";
+    this.detailPosition = "";
+    this.selectIndex = [0,0,0];
   }
 
 })

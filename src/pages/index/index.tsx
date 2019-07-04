@@ -4,7 +4,7 @@ import { observable, toJS } from 'mobx';
 import { ComponentType } from 'react';
 import { ICommontStore, IIndexStore } from 'src/store/interface';
 
-import { Button, CoverImage, CoverView, Map, Text, View } from '@tarojs/components';
+import { Button, CoverImage, CoverView, Image, Map, Text, View } from '@tarojs/components';
 import { marker } from '@tarojs/components/types/Map';
 import { inject, observer } from '@tarojs/mobx';
 import Taro, { Component, Config, MapContext } from '@tarojs/taro';
@@ -73,10 +73,10 @@ class Index extends Component {
         console.log('获取中心点', res)
         this.getRegion();
         this.getScale();
-        indexStore.setlocation(res.latitude,res.longitude)
+        indexStore.setlocation(res.latitude, res.longitude)
       },
       fail: (e) => {
-        console.log('error',e)
+        console.log('error', e)
       },
     })
   }
@@ -86,25 +86,25 @@ class Index extends Component {
     const { indexStore } = this.props;
     this.state.mapCtx.getRegion({
       success: async (res) => {
-        console.log('获取对角线',res)
+        console.log('获取对角线', res)
         await indexStore.getMapList(res.northeast, res.southwest);
       },
       fail: (e) => {
-        console.log('error',e)
+        console.log('error', e)
       },
     })
   }
 
-   // 获取层级
-   getScale() {
+  // 获取层级
+  getScale() {
     const { indexStore } = this.props;
     this.state.mapCtx.getScale({
       success: async (res) => {
-        console.log('获取层级',res)
+        console.log('获取层级', res)
         await indexStore.setScale(res.scale);
       },
       fail: (e) => {
-        console.log('error',e)
+        console.log('error', e)
       },
     })
   }
@@ -112,7 +112,7 @@ class Index extends Component {
   onRegionChange(e?) {
     console.log('onRegionChange', e)
     // 获取中心点
-    if(e.type === "end") {
+    if (e.type === "end") {
       this.getCenterLocation();
     }
   }
@@ -139,6 +139,27 @@ class Index extends Component {
         {/* <CoverView className="controls">
           <CoverImage className="img" src={require("../../assets/images/edit.png")} />
         </CoverView> */}
+        {/* <View className="add" onClick={() => {
+          Taro.navigateTo({
+            url: '/pages/video/addVideo'
+          })
+        }}>
+          <Image
+            className="addIcon"
+            mode="widthFix"
+            src={require("../../assets/images/add_icon.png")}
+          />
+        </View> */}
+
+        <CoverView className="add" onClick={() => {
+          Taro.navigateTo({
+            url: '/pages/video/addVideo'
+          })
+        }}>
+          <CoverImage
+            className="addIcon"
+            src={require("../../assets/images/add_icon.png")} />
+        </CoverView>
 
       </View>
     )

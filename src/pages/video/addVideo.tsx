@@ -34,7 +34,7 @@ class AddVideo extends Component {
   };
 
   componentWillMount() {
-    Taro.hideTabBar()
+    // Taro.hideTabBar()
   }
 
   componentWillReact() { }
@@ -45,9 +45,11 @@ class AddVideo extends Component {
     await addVideoStore.init(params);
   }
 
-  componentWillUnmount() { 
-    console.log('componentWillUnmount')
-    Taro.showTabBar();
+  componentWillUnmount() {
+    console.log('componentWillUnmount');
+    const {addVideoStore} = this.props; 
+    addVideoStore.clear();
+    // Taro.showTabBar();
   }
 
   componentDidShow() { }
@@ -56,12 +58,12 @@ class AddVideo extends Component {
 
   render() {
     const { addVideoStore, commonStore } = this.props;
-    const { title, titleLen, info, infoLen, videoId, videoSrc, selectIndex, provinces, locationName, location } = addVideoStore;
+    const { title, titleLen, info, infoLen, videoId, videoSrc, selectIndex, provinces, locationName, location, detailPosition } = addVideoStore;
     const multiArray = toJS(provinces);
     const multiIndex = toJS(selectIndex);
     console.log('multiArray', multiArray)
     console.log('multiIndex', multiIndex)
-    const locationClass = videoId?"disable":"itemRight";
+    const locationClass = videoId ? "disable" : "itemRight";
     return (
       <View className="addVideo">
         <View className="main">
@@ -99,15 +101,22 @@ class AddVideo extends Component {
             </View>
             <View className="item position">
               <View className="itemLeft">
-                <Picker
-                  mode="multiSelector" rangeKey="name"
-                  onChange={(e) => addVideoStore.regionChange(e)}
-                  onColumnChange={(e) => addVideoStore.regionColumnChange(e)}
-                  value={multiIndex} range={multiArray}>
-                  <View className="picker">
-                    {locationName}
-                  </View>
-                </Picker>
+                {
+                  videoId ? (
+                    <Text>{detailPosition}</Text>
+                  ) : (
+                    <Picker
+                      mode="multiSelector" rangeKey="name"
+                      onChange={(e) => addVideoStore.regionChange(e)}
+                      onColumnChange={(e) => addVideoStore.regionColumnChange(e)}
+                      value={multiIndex} range={multiArray}>
+                      <View className="picker">
+                        {locationName}
+                      </View>
+                    </Picker>
+                  )
+                }
+
               </View>
               {/* <Text className="itemRight" onClick={() => addVideoStore.getLocation()}>获取定位</Text> */}
             </View>

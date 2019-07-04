@@ -36,6 +36,7 @@ export interface  IVideoDetailStore {
   changeInput: Function;
   addVideoComment: Function;
   goComentDetail: Function;
+  scrollToLower: Function;
 }
 export interface IMineStore {
   tabActive: number;
@@ -45,6 +46,8 @@ export interface IMineStore {
   getConfig: Function;
   changeTab: Function;
   goVideoDetail: Function;
+  scrollToLower: Function;
+  scrollToUpper: Function;
 }
 
 export interface IAddVideoStore {
@@ -60,6 +63,7 @@ export interface IAddVideoStore {
   locationId: any;
   locationName: string;
   location: any;
+  detailPosition: string;
   provinces: Array<any>;
   init: Function;
   getLocation: Function;
@@ -68,6 +72,7 @@ export interface IAddVideoStore {
   regionChange: Function;
   regionColumnChange: Function;
   addVideo: Function;
+  clear: Function;
 }
 
 export interface IReplyStore {
@@ -78,6 +83,7 @@ export interface IReplyStore {
   init: Function;
   changeInput: Function;
   addReply: Function;
+  scrollToLower: Function;
 }
 
 export interface IRegisterStore {

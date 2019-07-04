@@ -1,4 +1,4 @@
-import { observable, runInAction } from 'mobx';
+import { autorun, observable, runInAction } from 'mobx';
 
 import Taro, { Component } from '@tarojs/taro';
 
@@ -30,12 +30,12 @@ const mineStore = observable({
   tab: tab,
   tabActive: 1,
   page: 1,
+  pages: 1,
   list:[],
   async init() {
-    
+    this.list = [];
     setTimeout(async() => {
       await this.getMyVideoList();
-      await this.changeTab(1);
     }, 1000);
     
   },
@@ -43,12 +43,14 @@ const mineStore = observable({
     if(this.tabActive === value) {
       return;
     } else {
-      this.tabActive = value;
-      this.setActiveTab();
-      await this.getMyVideoList();
+      runInAction(async()=>{
+        this.list = [];
+        this.page = 1;
+        this.tabActive = value;
+        this.setActiveTab();
+        await this.getMyVideoList();
+      })
     }
-    
-   
   },
   setActiveTab() {
     this.tab.map((item)=>{
@@ -66,13 +68,29 @@ const mineStore = observable({
       page: this.page,
     });
     runInAction(()=>{
-      this.list = data.list;
+      this.list = this.list.concat(data.list);
+      this.pages = data.page_count;
     })
   },
   goVideoDetail(item) {
-    Taro.reLaunch({
+    Taro.navigateTo({
       url: `/pages/video/addVideo?id=${item.id}`
     })
-  }
+  },
+  // 下拉加载
+  async scrollToLower() {
+    if(this.page < this.pages) {
+      this.page++;
+      await this.getMyVideoList();
+    }
+    console.log("下拉加载");
+  },
+  // // 上拉刷新
+  // async scrollToUpper() {
+  //   this.page = 1;
+  //   this.list = [];
+  //   await this.getMyVideoList();
+  //   console.log("上拉刷新")
+  // }
 })
 export default mineStore

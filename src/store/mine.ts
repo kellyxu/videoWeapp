@@ -40,11 +40,11 @@ const mineStore = observable({
     
   },
   async changeTab(value) {
+    this.list = [];
     if(this.tabActive === value) {
       return;
     } else {
       runInAction(async()=>{
-        this.list = [];
         this.page = 1;
         this.tabActive = value;
         this.setActiveTab();

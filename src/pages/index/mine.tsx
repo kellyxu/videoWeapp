@@ -37,7 +37,9 @@ class Mine extends Component {
    
   }
 
-  componentWillUnmount() { }
+  componentWillUnmount() {
+    
+   }
 
   async componentDidShow() {
     console.log('componentDidShow')

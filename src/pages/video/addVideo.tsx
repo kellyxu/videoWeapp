@@ -71,7 +71,7 @@ class AddVideo extends Component {
             videoSrc ? (
               <View className="videoBox">
                 <Video className="myVideo" src={videoSrc}
-                  show-center-play-btn enable-danmu controls autoplay={true}
+                  duration={15} showCenterPlayBtn controls autoplay={true}
                 ></Video>
                 {
                   !videoId ? (

@@ -62,7 +62,7 @@ class VideoDeatil extends Component {
       <View className="videoDetail">
         <View className="videoBox">
           <Video className="myVideo" src={videoDetail.url}
-            show-center-play-btn enable-danmu controls autoplay={true}
+            duration={15} showCenterPlayBtn controls autoplay={true}
           ></Video>
         </View>
 

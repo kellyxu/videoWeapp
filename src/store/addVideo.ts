@@ -84,7 +84,8 @@ const addVideoStore = observable({
     try {
       const chooseRes = await Taro.chooseVideo({
         sourceType: ['album', 'camera'],
-        maxDuration: 60,
+        compressed: true,
+        maxDuration: 15,
       })
       this.videoSrc = chooseRes.tempFilePath;
       qiniuUploader.upload(chooseRes.tempFilePath, (res) => {

@@ -33,6 +33,9 @@ const mineStore = observable({
   pages: 1,
   list:[],
   async init() {
+    await commonStore.checkUser();
+    this.tabActive = 1;
+    this.tab = tab;
     this.list = [];
     setTimeout(async() => {
       await this.getMyVideoList();

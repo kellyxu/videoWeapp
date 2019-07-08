@@ -58,32 +58,32 @@ class App extends Component {
       navigationBarTitleText: 'WeChat',
       navigationBarTextStyle: 'black'
     },
-    tabBar: {
-      color: "#999999",
-      selectedColor: "#00BCD4",
-      borderStyle: "white",
-      backgroundColor: "#fff",
-      list: [
-        {
-          pagePath: "pages/index/index",
-          text: "视频",
-          iconPath: "./assets/images/home.png",
-          selectedIconPath: "./assets/images/home_active.png"
-        },
-        // {
-        //   pagePath: "pages/video/addVideo",
-        //   text: "",
-        //   iconPath: "./assets/images/add.png",
-        //   selectedIconPath: "./assets/images/add_icon.png"
-        // },
-        {
-          pagePath: "pages/index/mine",
-          text: "我的",
-          iconPath: "./assets/images/mine.png",
-          selectedIconPath: "./assets/images/mine_active.png"
-        }
-      ]
-    },
+    // tabBar: {
+    //   color: "#999999",
+    //   selectedColor: "#00BCD4",
+    //   borderStyle: "white",
+    //   backgroundColor: "#fff",
+    //   list: [
+    //     {
+    //       pagePath: "pages/index/index",
+    //       text: "视频",
+    //       iconPath: "./assets/images/home.png",
+    //       selectedIconPath: "./assets/images/home_active.png"
+    //     },
+    //     {
+    //       pagePath: "pages/video/addVideo",
+    //       text: "",
+    //       iconPath: "./assets/images/add.png",
+    //       selectedIconPath: "./assets/images/add_icon.png"
+    //     },
+    //     {
+    //       pagePath: "pages/index/mine",
+    //       text: "我的",
+    //       iconPath: "./assets/images/mine.png",
+    //       selectedIconPath: "./assets/images/mine_active.png"
+    //     }
+    //   ]
+    // },
     permission: {
       "scope.userLocation": {
         "desc": "你的位置信息将用于小程序位置接口的效果展示"

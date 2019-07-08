@@ -99,7 +99,8 @@ class AddVideo extends Component {
                 maxlength={20} auto-height placeholder="请输入视频标题" />
               <Text className="itemRight">{titleLen}</Text>
             </View>
-            <View className="item position">
+            
+            {/* <View className="item position">
               <View className="itemLeft">
                 {
                   videoId ? (
@@ -118,7 +119,6 @@ class AddVideo extends Component {
                 }
 
               </View>
-              {/* <Text className="itemRight" onClick={() => addVideoStore.getLocation()}>获取定位</Text> */}
             </View>
             <View className="item position">
               <View className="itemLeft">
@@ -126,6 +126,7 @@ class AddVideo extends Component {
               </View>
               <Text className={locationClass} onClick={() => addVideoStore.getLocation()}>获取定位</Text>
             </View>
+             */}
             <View className="item infoBox">
               <Textarea className="itemLeft" value={info}
                 onInput={(event) => addVideoStore.changeInput('info', event)}

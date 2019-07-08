@@ -4,6 +4,7 @@ import Taro from '@tarojs/taro';
 
 import { addVideo, getQiniuToken, getVideoDetail } from '../services/service';
 import qiniuUploader from '../utils/qiniuUploader';
+import indexStore from './';
 import commonStore from './common';
 
 // 初始化七牛相关参数
@@ -38,24 +39,24 @@ const addVideoStore = observable({
   get infoLen() {
     return `${this.info.length}/300`;
   },
-  get locationId() {
-    var id = {};
-    if(this.provinces && this.selectIndex && this.selectIndex.length > 0) {
-      id = {
-        province: this.provinces[0][this.selectIndex[0]].id,
-        city: this.provinces[1][this.selectIndex[1]].id,
-        street: this.provinces[2][this.selectIndex[2]].id,
-      }
-    }
-    return id;
-  },
-  get locationName() {
-    let name = "";
-    if(this.provinces && this.selectIndex && this.selectIndex.length > 0) {
-      name = `${this.provinces[0][this.selectIndex[0]].name}，${this.provinces[1][this.selectIndex[1]].name}，${this.provinces[2][this.selectIndex[2]].name}`;
-    }
-    return name;
-  },
+  // get locationId() {
+  //   var id = {};
+  //   if(this.provinces && this.selectIndex && this.selectIndex.length > 0) {
+  //     id = {
+  //       province: this.provinces[0][this.selectIndex[0]].id,
+  //       city: this.provinces[1][this.selectIndex[1]].id,
+  //       street: this.provinces[2][this.selectIndex[2]].id,
+  //     }
+  //   }
+  //   return id;
+  // },
+  // get locationName() {
+  //   let name = "";
+  //   if(this.provinces && this.selectIndex && this.selectIndex.length > 0) {
+  //     name = `${this.provinces[0][this.selectIndex[0]].name}，${this.provinces[1][this.selectIndex[1]].name}，${this.provinces[2][this.selectIndex[2]].name}`;
+  //   }
+  //   return name;
+  // },
   changeInput(key, e) {
     const value = e.detail.value;
     console.log(this[key], value)
@@ -67,11 +68,17 @@ const addVideoStore = observable({
     if (areaRange && areaRange.length > 0) {
       this.provinces = [areaRange, areaRange[0].childAreas, areaRange[0].childAreas[0].childAreas];
     }
-    if(params && params.id) {
+    if(params && params.id) { // 编辑
       this.videoId = params.id;
       this.getVideoDetail(params.id);
-    } else {
-      this.getQiniuToken();
+    } else { // 新增
+      const detail:any = indexStore.addVideoDetail;
+      this.location = {
+        latitude: detail.latitude,
+        longitude: detail.longitude,
+      };
+      this.videoSrc = detail.videoSrc;
+      this.videoKey = detail.videoKey;
     }
   },
   async getQiniuToken() {
@@ -162,8 +169,9 @@ const addVideoStore = observable({
     if(!this.isDisabledBtn) {
       return;
     }
+    await commonStore.checkUser();
     const params = {
-      ...this.locationId,
+      // ...this.locationId,
       map_lng: this.location.longitude,
       map_lat: this.location.latitude,
       id: this.videoId?this.videoId:"",
@@ -171,10 +179,10 @@ const addVideoStore = observable({
       descp: this.info,
       url: this.videoKey,
       uid: commonStore.user.uid,
-      addr: this.videoId?this.location.name:this.location.address,
+      // addr: this.videoId?this.location.name:this.location.address,
     };
     console.log('参数',params)
-    if(!params.title || !params.descp || !params.url || !params.addr || !params.province) {
+    if(!params.title || !params.descp || !params.url ) {
       Taro.showToast({
         title: "请先完善信息！",
         duration: 2000,

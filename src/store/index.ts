@@ -2,8 +2,21 @@ import { observable, runInAction } from 'mobx';
 
 import Taro, { Component } from '@tarojs/taro';
 
-import { getMapList } from '../services/service';
+import { getMapList, getQiniuToken } from '../services/service';
+import qiniuUploader from '../utils/qiniuUploader';
 import commonStore from './common';
+
+// 初始化七牛相关参数
+function initQiniu(token) {
+  var options = {
+    uptoken: token,
+    region: 'ECN', // 华北区
+    uptokenURL: "",
+    domain: '',
+    shouldUseQiniuFileName: false
+  };
+  qiniuUploader.init(options);
+}
 
 const indexStore = observable({
   latitude: 0,
@@ -13,25 +26,27 @@ const indexStore = observable({
   isCallout: false, // 点击气泡
   list: [],
   goVideoParams:{},
+  qiniuToken: "",
+  addVideoDetail:{},
   get markers() {
     const markers = this.list.map((value, index) => {
       return {
         id: index,
         latitude: value.map_lat,
         longitude: value.map_lng,
-        width: 1,
-        height: 1,
+        width: 30,
+        height: 30,
         iconPath: require("../assets/images/center_icon.png"),
-        callout: {
-          content: `${value.name}(${value.num})`,
-          fontSize: 18,
-          color: "#ffffff",
-          bgColor: "#4384FE",
-          borderRadius: 200,
-          padding: 20,
-          textAlign: "center",
-          display: "ALWAYS"
-        }
+        // callout: {
+        //   content: `${value.name}(${value.num})`,
+        //   fontSize: 18,
+        //   color: "#ffffff",
+        //   bgColor: "#4384FE",
+        //   borderRadius: 200,
+        //   padding: 20,
+        //   textAlign: "center",
+        //   display: "ALWAYS"
+        // }
       }
     });
     return markers || [];
@@ -51,18 +66,20 @@ const indexStore = observable({
   },
   async init() {
     await this.getLocation();
-    this.iconLeft = commonStore.windowWidth / 2;
-    this.iconTop = commonStore.windowHeight / 2;
-    this.controls = [{
-      id: "1",
-      iconPath: require("../assets/images/center_icon.png"),
-      position: {
-        left: `${this.iconLeft - 10}`,
-        top: `${this.iconTop - 10}`,
-        width: 20,
-        height: 20
-      },
-    }];
+    this.iconLeft = commonStore.windowWidth / 2 - 10 + 'px';
+    this.iconTop = commonStore.windowHeight / 2 - 40 + 'px';
+
+    // this.controls = [{
+    //   id: "1",
+    //   iconPath: require("../assets/images/point.png"),
+    //   position: {
+    //     left: `${this.iconLeft - 10}`,
+    //     top: `${this.iconTop - 10}`,
+    //     width: 20,
+    //     height: 30
+    //   },
+    // }];
+    await this.getQiniuToken();
   },
   async getLocation() {
     try {
@@ -86,8 +103,10 @@ const indexStore = observable({
       minlat: southwest.latitude,
       maxlng: northeast.longitude,
       minlng: southwest.longitude,
-      type: this.type,
-      aid: this.aid && this.isCallout ? this.aid : "",
+      // type: this.type,
+      type: "video",
+      aid: "",
+      // aid: this.aid && this.isCallout ? this.aid : "",
     };
     runInAction(async() => {
       const { data = [] } = await getMapList(params);
@@ -111,7 +130,6 @@ const indexStore = observable({
     this.isCallout = true;
     const data = this.list[index];
     this.aid = data.id;
-    this.setlocation(data.map_lat, data.map_lng);
     if (this.isCallout && this.type === "province") {
       this.scale = 10;
     } else if (this.isCallout && this.type === "city") {
@@ -124,6 +142,51 @@ const indexStore = observable({
         url: `/pages/video/videoDetail?id=${this.aid}`
       });
     }
+  }, 
+  // 获取七牛云token
+  async getQiniuToken() {
+    const token = await getQiniuToken();
+    this.qiniuToken = token.data;
+    initQiniu(this.qiniuToken);
+  },
+  // 发布视频
+  async addVideo() {
+    try {
+      const chooseRes = await Taro.chooseVideo({
+        sourceType: ['album', 'camera'],
+        compressed: true,
+        maxDuration: 15,
+      })
+      Taro.showLoading({
+        title: '视频上传中',
+      })
+      qiniuUploader.upload(chooseRes.tempFilePath, (res) => {
+        this.addVideoDetail = {
+          videoSrc: chooseRes.tempFilePath,
+          videoKey: res.key,
+          latitude: this.latitude,
+          longitude: this.longitude,
+        }
+        console.log('选择视频',this.addVideoDetail);
+        Taro.navigateTo({
+          url: `/pages/video/addVideo?latitude=${this.latitude}&longitude=&${this.longitude}`
+        });
+        Taro.hideLoading();
+      }, (error) => {
+        Taro.hideLoading();
+        Taro.showToast({
+          title: '视频上传失败！',
+          duration: 2000,
+          icon: 'none'
+        });
+        console.error('error: ' + JSON.stringify(error));
+      })
+    } catch (error) {
+      console.log('error',error)
+    } finally {
+      console.log('finally')
+    }
+    
   }
 
 })

@@ -117,6 +117,7 @@ class Mine extends Component {
                             <View className="title">{item.title}</View>
                             {
                               tabActive === 0 ? (
+                              // tabActive === 1 ? (
                                 <View className="btnBox">
                                   <Image
                                     className="editIcon"
@@ -130,14 +131,14 @@ class Mine extends Component {
 
                           </View>
                           <View className="positionBox">
-                            <View className="right">
+                            {/* <View className="right">
                               <Image
                                 className="icon"
                                 mode="widthFix"
                                 src={require("../../assets/images/position_icon.png")}
                               />
                               <Text className="">{item.province}-{item.street}-{item.city}</Text>
-                            </View>
+                            </View> */}
                             <View className="left">
                               <Image
                                 className="icon"

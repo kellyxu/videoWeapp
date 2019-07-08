@@ -8,18 +8,19 @@ import { inject, observer } from '@tarojs/mobx';
 import Taro, { Component, Config } from '@tarojs/taro';
 
 import Tips from '../../components/tips/tips';
-import { IReplyStore, IVideoDetailStore } from '../../store/interface';
+import { ICommontStore, IReplyStore, IVideoDetailStore } from '../../store/interface';
 
 type PageStateProps = {
   replyStore: IReplyStore;
-  videoDetailStore: IVideoDetailStore,
+  videoDetailStore: IVideoDetailStore;
+  commonStore: ICommontStore;
 }
 
 interface Reply {
   props: PageStateProps;
 }
 
-@inject('replyStore','videoDetailStore')
+@inject('replyStore', 'videoDetailStore', 'commonStore')
 @observer
 class Reply extends Component {
 
@@ -47,9 +48,10 @@ class Reply extends Component {
   componentDidHide() { }
 
   render() {
-    const { replyStore, videoDetailStore } = this.props;
+    const { replyStore, videoDetailStore, commonStore } = this.props;
     const { reply, num, replyDetail, replyList } = replyStore;
     const { commentDetail } = videoDetailStore;
+    const { user } = commonStore;
 
     const tipData = {
       icon: require("../../assets/images/empty.png"),
@@ -64,15 +66,15 @@ class Reply extends Component {
             <Image
               className="headImg"
               mode="widthFix"
-              src={ commentDetail && commentDetail.user && commentDetail.user.logo?commentDetail.user.logo:require("../../assets/images/avatar.png")}
+              src={commentDetail && commentDetail.user && commentDetail.user.logo ? commentDetail.user.logo : require("../../assets/images/avatar.png")}
             />
             <View className="detail">
               <View className="name">
                 {commentDetail.user.name}
-                </View>
+              </View>
               <View className="text">
                 {commentDetail.content}
-                </View>
+              </View>
               <View className="date">
                 <Text>{commentDetail.time}</Text>
                 <Text className="num">{commentDetail.replys}回复</Text>
@@ -94,7 +96,7 @@ class Reply extends Component {
                 scrollY
                 scrollWithAnimation
                 upperThreshold={100}
-                onScrollToLower={async() => await replyStore.scrollToLower()}
+                onScrollToLower={async () => await replyStore.scrollToLower()}
               >
                 {
                   toJS(replyList).map((item) => {
@@ -103,7 +105,7 @@ class Reply extends Component {
                         <Image
                           className="headImg"
                           mode="widthFix"
-                          src={item.user.logo?item.user.logo:require("../../assets/images/avatar.png")}
+                          src={item.user.logo ? item.user.logo : require("../../assets/images/avatar.png")}
                         />
                         <View className="detail">
                           <View className="name">
@@ -130,23 +132,28 @@ class Reply extends Component {
           }
         </View>
 
-        <View className="footer">
-          <Input
-            className="input"
-            type="text"
-            maxLength={100}
-            placeholder="喜欢就发表一下见解吧～"
-            value={reply}
-            onInput={(event) => replyStore.changeInput(event)}
-          />
-          <Button
-            onClick={() => replyStore.addReply()}
-            className="btn"
-            // disabled={!reply} 
-          >
-            回复
+        {
+          user && user.uid && (
+            <View className="footer">
+              <Input
+                className="input"
+                type="text"
+                maxLength={100}
+                placeholder="喜欢就发表一下见解吧～"
+                value={reply}
+                onInput={(event) => replyStore.changeInput(event)}
+              />
+              <Button
+                onClick={() => replyStore.addReply()}
+                className="btn"
+                disabled={!reply}
+              >
+                回复
           </Button>
-        </View>
+            </View>
+          )
+        }
+
 
       </View>
     )

@@ -105,10 +105,14 @@ export interface IIndexStore {
   controls: Array<any>;
   circles: Array<any>;
   scale: number;
+  iconLeft: string;
+  iconTop: string;
+  isCallout: boolean;
   init: Function;
   getMapList: Function;
   changeLocation: Function;
   setScale: Function;
   setlocation: Function;
   handleClickCallout: Function;
+  addVideo: Function;
 }

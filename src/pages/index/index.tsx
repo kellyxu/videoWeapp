@@ -5,11 +5,8 @@ import { ComponentType } from 'react';
 import { ICommontStore, IIndexStore } from 'src/store/interface';
 
 import { Button, CoverImage, CoverView, Image, Map, Text, View } from '@tarojs/components';
-import { marker } from '@tarojs/components/types/Map';
 import { inject, observer } from '@tarojs/mobx';
 import Taro, { Component, Config, MapContext } from '@tarojs/taro';
-
-import TabBar from '../../components/tabBar/tabBar';
 
 type PageStateProps = {
   indexStore: IIndexStore,
@@ -46,8 +43,9 @@ class Index extends Component {
   }
 
   componentDidMount() {
-    const { indexStore } = this.props;
-    indexStore.init();
+    Taro.showShareMenu({
+      withShareTicket: true
+    })
   }
 
   componentWillUnmount() {
@@ -126,40 +124,43 @@ class Index extends Component {
 
 
   render() {
-    const { indexStore } = this.props;
-    const { longitude, latitude, markers, controls, polyline, circles, scale } = indexStore;
+    const { indexStore, commonStore } = this.props;
+    const { longitude, latitude, markers, controls, polyline, circles, scale, iconLeft, iconTop } = indexStore;
+    const { user } = commonStore;
     return (
       <View className="index">
         <Map id="map" className="map" longitude={longitude} latitude={latitude} scale={scale}
           controls={controls} markers={markers} polyline={polyline} circles={toJS(circles)}
           showLocation={true}
-          onRegionChange={this.onRegionChange} onCalloutTap={this.onCalloutTap}
+          onRegionChange={this.onRegionChange} onMarkerTap={this.onCalloutTap}
         ></Map>
-        {/* <TabBar  /> */}
-        {/* <CoverView className="controls">
-          <CoverImage className="img" src={require("../../assets/images/edit.png")} />
-        </CoverView> */}
-        {/* <View className="add" onClick={() => {
-          Taro.navigateTo({
-            url: '/pages/video/addVideo'
-          })
-        }}>
-          <Image
-            className="addIcon"
-            mode="widthFix"
-            src={require("../../assets/images/add_icon.png")}
-          />
-        </View> */}
 
-        <CoverView className="add" onClick={() => {
+        <CoverView className="center" style={{'left':iconLeft,'top':iconTop}}>
+          <CoverImage
+            className="addIcon"
+            src={require("../../assets/images/point.png")} />
+        </CoverView>
+
+        {
+          user && user.uid && (
+            <CoverView className="footer">
+              <CoverView className="add" onClick={() => indexStore.addVideo()}>
+                <CoverView>发布视频</CoverView>
+              </CoverView>
+            </CoverView>
+          )
+        }
+
+        <CoverView className="my" onClick={() => {
           Taro.navigateTo({
-            url: '/pages/video/addVideo'
+            url: '/pages/index/mine'
           })
         }}>
           <CoverImage
             className="addIcon"
-            src={require("../../assets/images/add_icon.png")} />
+            src={user && user.logo ? user.logo : require("../../assets/images/avatar.png")} />
         </CoverView>
+
 
       </View>
     )

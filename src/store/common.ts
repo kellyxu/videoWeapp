@@ -1,4 +1,5 @@
 import { observable, runInAction } from 'mobx';
+import { error } from 'util';
 
 import Taro, { Component } from '@tarojs/taro';
 
@@ -58,6 +59,16 @@ const commonStore = observable({
         });
       }
     }
+  },
+  async checkUser() {
+    await this.getUserInfo();
+    if (this.user.uid) {
+      return;
+    }
+    await Taro.navigateTo({
+      url: '/pages/register/register',
+    });
+    throw new Error("无法操作");
   },
   async getArea() {
     const { data } = await getArea();

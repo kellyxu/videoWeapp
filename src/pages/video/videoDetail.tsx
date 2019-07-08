@@ -38,6 +38,10 @@ class VideoDeatil extends Component {
     const { videoDetailStore } = this.props;
     const params = this.$router.params;
     await videoDetailStore.init(params);
+
+    Taro.showShareMenu({
+      withShareTicket: true
+    })
   }
 
   componentWillUnmount() { }
@@ -69,7 +73,7 @@ class VideoDeatil extends Component {
         <View className="content">
           <View className="headerBox">
             <Text className="title">{videoDetail.title}</Text>
-            <View className="position">
+            {/* <View className="position">
               <View className="position">
                 <Image
                   className="icon"
@@ -78,16 +82,16 @@ class VideoDeatil extends Component {
                 />
                 <Text className="text">{videoDetail.province}-{videoDetail.city}-{videoDetail.street}</Text>
               </View>
-            </View>
+            </View> */}
           </View>
           <View className="userInfo">
             <View className="item name">
               <Image
                 className="icon"
                 mode="widthFix"
-                src={user && user.logo ? user.logo : require("../../assets/images/avatar.png")}
+                src={videoDetail.user && videoDetail.user.logo ? videoDetail.user.logo : require("../../assets/images/avatar.png")}
               />
-              <Text className="text">{user.name}</Text>
+              <Text className="text">{videoDetail.user.name}</Text>
             </View>
             <View className="item">
               <Image
@@ -124,17 +128,17 @@ class VideoDeatil extends Component {
                 scrollY
                 scrollWithAnimation
                 upperThreshold={100}
-                onScrollToLower={async() => await videoDetailStore.scrollToLower()}
+                onScrollToLower={async () => await videoDetailStore.scrollToLower()}
               >
                 {
                   toJS(commentList).map((item) => {
-                    console.log('item.user',item.user)
+                    console.log('item.user', item.user)
                     return (
-                      <View className="item" key={item.id} onClick={()=>videoDetailStore.goComentDetail(item)}>
+                      <View className="item" key={item.id} onClick={() => videoDetailStore.goComentDetail(item)}>
                         <Image
                           className="headImg"
                           mode="widthFix"
-                          src={item.user.logo?item.user.logo:require("../../assets/images/avatar.png")}
+                          src={item.user.logo ? item.user.logo : require("../../assets/images/avatar.png")}
                         />
                         <View className="detail">
                           <View className="name">
@@ -159,21 +163,24 @@ class VideoDeatil extends Component {
 
         </View>
 
-        <View className="footer">
-          <Input
-            className="input"
-            type="text"
-            maxLength={100}
-            placeholder="喜欢就发表一下见解吧～"
-            value={comment}
-            onInput={(event) => videoDetailStore.changeInput(event)}
-          />
-          <Button className="btn"
-            onClick={() => videoDetailStore.addVideoComment()}
-            disabled={!comment} >
-            发送
-          </Button>
-        </View>
+        {
+          user && user.uid && (<View className="footer">
+            <Input
+              className="input"
+              type="text"
+              maxLength={100}
+              placeholder="喜欢就发表一下见解吧～"
+              value={comment}
+              onInput={(event) => videoDetailStore.changeInput(event)}
+            />
+            <Button className="btn"
+              onClick={() => videoDetailStore.addVideoComment()}
+              disabled={!comment} >
+              发送
+            </Button>
+          </View>)
+        }
+
 
       </View>
     )

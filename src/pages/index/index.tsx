@@ -138,7 +138,7 @@ class Index extends Component {
         <CoverView className="center" style={{'left':iconLeft,'top':iconTop}}>
           <CoverImage
             className="addIcon"
-            src={require("../../assets/images/point.png")} />
+            src={require("../../assets/images/center.png")} />
         </CoverView>
 
         {

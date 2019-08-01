@@ -66,8 +66,8 @@ const indexStore = observable({
   },
   async init() {
     await this.getLocation();
-    this.iconLeft = commonStore.windowWidth / 2 - 10 + 'px';
-    this.iconTop = commonStore.windowHeight / 2 - 40 + 'px';
+    this.iconLeft = commonStore.windowWidth / 2 - 15 + 'px';
+    this.iconTop = commonStore.windowHeight / 2 - 30 + 'px';
 
     // this.controls = [{
     //   id: "1",

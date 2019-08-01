@@ -73,7 +73,7 @@ class Mine extends Component {
 
         </View>
 
-        <View style={{ "background": "#4384FE","margin-top":"-5px" }}>
+        <View style={{ "background": "#4384FE","marginTop":"-5px" }}>
           <Image
             className="bolang"
             mode="widthFix"

@@ -54,8 +54,8 @@ const videoDetailStore = observable({
       //   icon: "none"
       // });
       this.comment = "";
+      this.commentList = [];
       await this.getVideoComments();
-      await this.getVideoDetai();
     } else {
       Taro.showToast({
         title: "评论失败，请稍后再试！",

@@ -45,6 +45,7 @@ const replyStore = observable({
       //   icon: "none"
       // });
       this.reply = "";
+      this.replyList = [];
       await this.getReplyList();
     } else {
       Taro.showToast({

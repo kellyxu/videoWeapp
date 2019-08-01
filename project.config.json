@@ -2,7 +2,7 @@
 	"miniprogramRoot": "dist/",
 	"projectname": "videoWeapp",
 	"description": "微信小程序",
-	"appid": "wx359ace48793ba6d0",
+	"appid": "wx4aa8a89e3d5ba6dc",
 	"setting": {
 		"urlCheck": true,
 		"es6": false,

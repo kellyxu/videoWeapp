@@ -1,6 +1,6 @@
 import { observable } from 'mobx';
 
-import Taro from '@tarojs/taro';
+import Taro, { getUserInfo } from '@tarojs/taro';
 
 import { checkCode, sendSmsCode, setUser } from '../services/service';
 import commonStore from '../store/common';
@@ -11,7 +11,7 @@ const registerStore = observable({
   name: "",
   btnText: '获取验证码',
   timer: "",
-  delay: 5,
+  delay: 60,
   canGet: true,
   mobileReg: /^[1]\d{10}$/,
 
@@ -78,6 +78,7 @@ const registerStore = observable({
         });
         Taro.hideLoading();
         if(res.status === "success") {
+          await commonStore.getUserInfo();
           Taro.reLaunch({
             url: '/pages/index/index'
           })

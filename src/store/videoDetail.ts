@@ -48,14 +48,14 @@ const videoDetailStore = observable({
       vid: this.detailId,
     });
     if (res.status === "success") {
-      Taro.showToast({
-        title: "评论成功，请等待审核",
-        duration: 2000,
-        icon: "none"
-      });
+      // Taro.showToast({
+      //   title: "评论成功，请等待审核",
+      //   duration: 2000,
+      //   icon: "none"
+      // });
       this.comment = "";
-      // await this.getVideoComments();
-      // await this.getVideoDetai();
+      await this.getVideoComments();
+      await this.getVideoDetai();
     } else {
       Taro.showToast({
         title: "评论失败，请稍后再试！",

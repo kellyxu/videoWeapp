@@ -39,13 +39,13 @@ const replyStore = observable({
       cid: this.replyId,
     });
     if (res.status === "success") {
-      Taro.showToast({
-        title: "回复成功，请等待审核",
-        duration: 2000,
-        icon: "none"
-      });
+      // Taro.showToast({
+      //   title: "回复成功，请等待审核",
+      //   duration: 2000,
+      //   icon: "none"
+      // });
       this.reply = "";
-      // await this.getReplyList();
+      await this.getReplyList();
     } else {
       Taro.showToast({
         title: "回复失败，请稍后再试！",

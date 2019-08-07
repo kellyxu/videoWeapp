@@ -34,18 +34,18 @@ class Mine extends Component {
   }
 
   componentDidMount() {
-   
+
   }
 
   componentWillUnmount() {
-    
-   }
+
+  }
 
   async componentDidShow() {
     console.log('componentDidShow')
     const { mineStore } = this.props;
     await mineStore.init();
-   }
+  }
 
   componentDidHide() { }
 
@@ -73,7 +73,7 @@ class Mine extends Component {
 
         </View>
 
-        <View style={{ "background": "#4384FE","marginTop":"-5px" }}>
+        <View style={{ "background": "#4384FE", "marginTop": "-5px" }}>
           <Image
             className="bolang"
             mode="widthFix"
@@ -100,8 +100,8 @@ class Mine extends Component {
                 scrollY
                 scrollWithAnimation
                 upperThreshold={100}
-                onScrollToLower={async() => await mineStore.scrollToLower()}
-                // onScrollToUpper={async() => await mineStore.scrollToUpper()}
+                onScrollToLower={async () => await mineStore.scrollToLower()}
+              // onScrollToUpper={async() => await mineStore.scrollToUpper()}
               >
                 {
                   toJS(list).map((item) => {
@@ -117,7 +117,7 @@ class Mine extends Component {
                             <View className="title">{item.title}</View>
                             {
                               tabActive === 0 ? (
-                              // tabActive === 1 ? (
+                                // tabActive === 1 ? (
                                 <View className="btnBox">
                                   <Image
                                     className="editIcon"
@@ -139,7 +139,7 @@ class Mine extends Component {
                               />
                               <Text className="">{item.province}-{item.street}-{item.city}</Text>
                             </View> */}
-                            <View className="left">
+                            <View className="right">
                               <Image
                                 className="icon"
                                 mode="widthFix"
@@ -147,23 +147,43 @@ class Mine extends Component {
                               />
                               <Text className="">{item.time}</Text>
                             </View>
+                            {/* <View className="left">
+                              <Image
+                                className="icon"
+                                mode="widthFix"
+                                src={require("../../assets/images/edit.png")}
+                              />
+                              <Text onClick={() => mineStore.goVideoDetail(item)} className="btn">删除</Text>
+                            </View> */}
                           </View>
-                          {
-                            tabActive === 1 ? (
-                              <View className="videoNumber">
-                                播放量
-                              <Text className="number">{item.hits}</Text>
-                              </View>
-                            ) : tabActive === 0 ? (
-                              <View className="checkIng">
-                                审核中
-                            </View>
-                            ) : (
-                                  <View className="unCheck">
-                                    未通过
-                            </View>
+                          <View className="statusBox">
+                            {
+                              tabActive === 1 ? (
+                                <View className="videoNumber">
+                                  播放量
+                                  <Text className="number">{item.hits}</Text>
+                                </View>
+                              ) : tabActive === 0 ? (
+                                <View className="checkIng">
+                                  审核中
+                                </View>
+                              ) : (
+                                <View className="unCheck">
+                                  未通过
+                                </View>
                                 )
-                          }
+                            }
+                            <View className="left">
+                              {/* <Image
+                                className="icon"
+                                mode="widthFix"
+                                src={require("../../assets/images/delete.png")}
+                              /> */}
+                              <Text onClick={() => mineStore.deleteVideo(item)} className="btn">删除</Text>
+                            </View>
+
+                          </View>
+
 
                         </View>
                       </View>

@@ -99,6 +99,13 @@ export const addVideo = params =>
 http.post("index/addVideo", params);
 
 /**
+ * 删除视频
+ * @param {id} params
+ */
+export const deleteVideo = params =>  
+http.get("index/del", params);
+
+/**
  * 获取省市区
  * @param {} 
  */

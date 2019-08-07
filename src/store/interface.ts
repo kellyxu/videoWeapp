@@ -46,6 +46,7 @@ export interface IMineStore {
   getConfig: Function;
   changeTab: Function;
   goVideoDetail: Function;
+  deleteVideo: Function;
   scrollToLower: Function;
   scrollToUpper: Function;
 }

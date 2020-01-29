@@ -25,9 +25,9 @@ const indexStore = observable({
   scale: 14,
   isCallout: false, // 点击气泡
   list: [],
-  goVideoParams:{},
+  goVideoParams: {},
   qiniuToken: "",
-  addVideoDetail:{},
+  addVideoDetail: {},
   get markers() {
     const markers = this.list.map((value, index) => {
       return {
@@ -53,11 +53,11 @@ const indexStore = observable({
   },
   get type() {
     let type = "province";
-    if(this.scale <=7) {
+    if (this.scale <= 7) {
       type = "province"
-    } else if(this.scale <=10) {
+    } else if (this.scale <= 10) {
       type = "city";
-    } else if(this.scale <=12) {
+    } else if (this.scale <= 12) {
       type = "street";
     } else {
       type = "video";
@@ -88,8 +88,8 @@ const indexStore = observable({
       });
       this.setlocation(location.latitude, location.longitude);
     } catch (res) {
-      this.setlocation("31.772752","119.946973");
-      console.log('定位',res)
+      this.setlocation("31.772752", "119.946973");
+      console.log('定位', res)
       Taro.showToast({
         title: "定位失败！",
         duration: 2000,
@@ -108,11 +108,11 @@ const indexStore = observable({
       aid: "",
       // aid: this.aid && this.isCallout ? this.aid : "",
     };
-    runInAction(async() => {
+    runInAction(async () => {
       const { data = [] } = await getMapList(params);
       this.list = data;
       this.isCallout = false;
-      if(params.type === "video") {
+      if (params.type === "video") {
         this.goVideoParams = params;
       }
     })
@@ -130,19 +130,23 @@ const indexStore = observable({
     this.isCallout = true;
     const data = this.list[index];
     this.aid = data.id;
-    if (this.isCallout && this.type === "province") {
-      this.scale = 10;
-    } else if (this.isCallout && this.type === "city") {
-      this.scale = 12;
-    } else if(this.isCallout && this.type === "street") {
-      this.scale = 14;
-    } else if(this.isCallout && this.type === "video") {
-      console.log('进入详情',this.aid)
-      Taro.navigateTo({
-        url: `/pages/video/videoDetail?id=${this.aid}`
-      });
-    }
-  }, 
+    console.log('进入详情', this.aid)
+    Taro.navigateTo({
+      url: `/pages/video/videoDetail?id=${this.aid}`
+    });
+    // if (this.isCallout && this.type === "province") {
+    //   this.scale = 10;
+    // } else if (this.isCallout && this.type === "city") {
+    //   this.scale = 12;
+    // } else if(this.isCallout && this.type === "street") {
+    //   this.scale = 14;
+    // } else if(this.isCallout && this.type === "video") {
+    //   console.log('进入详情',this.aid)
+    //   Taro.navigateTo({
+    //     url: `/pages/video/videoDetail?id=${this.aid}`
+    //   });
+    // }
+  },
   // 获取七牛云token
   async getQiniuToken() {
     const token = await getQiniuToken();
@@ -167,7 +171,7 @@ const indexStore = observable({
           latitude: this.latitude,
           longitude: this.longitude,
         }
-        console.log('选择视频',this.addVideoDetail);
+        console.log('选择视频', this.addVideoDetail);
         Taro.navigateTo({
           url: `/pages/video/addVideo?latitude=${this.latitude}&longitude=&${this.longitude}`
         });
@@ -182,11 +186,11 @@ const indexStore = observable({
         console.error('error: ' + JSON.stringify(error));
       })
     } catch (error) {
-      console.log('error',error)
+      console.log('error', error)
     } finally {
       console.log('finally')
     }
-    
+
   }
 
 })

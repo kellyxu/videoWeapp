@@ -135,21 +135,26 @@ class Index extends Component {
           onRegionChange={this.onRegionChange} onMarkerTap={this.onCalloutTap}
         ></Map>
 
-        <CoverView className="center" style={{'left':iconLeft,'top':iconTop}}>
+        <CoverView className="center" style={{ 'left': iconLeft, 'top': iconTop }}>
           <CoverImage
             className="addIcon"
             src={require("../../assets/images/center.png")} />
         </CoverView>
 
-        {
-          user && user.uid && (
-            <CoverView className="footer">
-              <CoverView className="add" onClick={() => indexStore.addVideo()}>
-                <CoverView>发布视频</CoverView>
-              </CoverView>
-            </CoverView>
-          )
-        }
+        <CoverView className="footer">
+          <CoverView className="add" onClick={() => {
+            if (user && user.uid) {
+              indexStore.addVideo()
+            } else {
+              Taro.navigateTo({
+                url: '/pages/register/register'
+              })
+            }
+          }
+          }>
+            <CoverView>发布视频</CoverView>
+          </CoverView>
+        </CoverView>
 
         <CoverView className="my" onClick={() => {
           Taro.navigateTo({

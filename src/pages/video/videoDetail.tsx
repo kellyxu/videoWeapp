@@ -24,7 +24,7 @@ interface VideoDeatil {
 class VideoDeatil extends Component {
 
   config: Config = {
-    navigationBarTitleText: '视频详情'
+    navigationBarTitleText: '详情'
   }
 
   componentWillMount() {
@@ -53,7 +53,7 @@ class VideoDeatil extends Component {
   render() {
     const { videoDetailStore, commonStore } = this.props;
     const { comment, num, commentList, videoDetail } = videoDetailStore;
-    const { user } = commonStore;
+    const { user, isShow } = commonStore;
     console.log('videoDetail', commentList)
 
     const tipData = {
@@ -64,11 +64,15 @@ class VideoDeatil extends Component {
 
     return (
       <View className="videoDetail">
-        <View className="videoBox">
-          <Video className="myVideo" src={videoDetail.url}
-            duration={15} showCenterPlayBtn controls autoplay={true}
-          ></Video>
-        </View>
+        {
+          isShow && (
+            <View className="videoBox">
+              <Video className="myVideo" src={videoDetail.url}
+                duration={15} showCenterPlayBtn controls autoplay={true}
+              ></Video>
+            </View>
+          )
+        }
 
         <View className="content">
           <View className="headerBox">

@@ -133,5 +133,12 @@ export const checkCode = params =>
 export const getQiniuToken = () =>  
   http.get("image/qnUpload");
 
+/**
+ * 是否隐藏
+ * @param {} 
+ */
+export const nowShow = () =>  
+  http.get("index/now");
+
  
 

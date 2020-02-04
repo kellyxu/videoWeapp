@@ -26,7 +26,7 @@ interface IndexState {
 class Index extends Component {
 
   config: Config = {
-    navigationBarTitleText: '视频'
+    navigationBarTitleText: '信息'
   }
 
   state: IndexState = {
@@ -53,12 +53,14 @@ class Index extends Component {
   }
 
   componentDidShow() {
+    const { commonStore } = this.props;
     const mapCtx = Taro.createMapContext('map');
     this.setState({
       mapCtx
     }, () => {
       this.getCenterLocation();
     })
+    commonStore.nowShow();
   }
 
   componentDidHide() { }
@@ -126,7 +128,7 @@ class Index extends Component {
   render() {
     const { indexStore, commonStore } = this.props;
     const { longitude, latitude, markers, controls, polyline, circles, scale, iconLeft, iconTop } = indexStore;
-    const { user } = commonStore;
+    const { user, isShow } = commonStore;
     return (
       <View className="index">
         <Map id="map" className="map" longitude={longitude} latitude={latitude} scale={scale}
@@ -141,32 +143,38 @@ class Index extends Component {
             src={require("../../assets/images/center.png")} />
         </CoverView>
 
-        <CoverView className="footer">
-          <CoverView className="add" onClick={() => {
-            if (user && user.uid) {
-              indexStore.addVideo()
-            } else {
+        {
+          isShow && (
+            <CoverView className="footer">
+              <CoverView className="add" onClick={() => {
+                if (user && user.uid) {
+                  indexStore.addVideo()
+                } else {
+                  Taro.navigateTo({
+                    url: '/pages/register/register'
+                  })
+                }
+              }
+              }>
+                <CoverView>发布视频</CoverView>
+              </CoverView>
+            </CoverView>)
+        }
+
+        {
+          user && user.uid && (
+            <CoverView className="my" onClick={() => {
               Taro.navigateTo({
-                url: '/pages/register/register'
+                url: '/pages/index/mine'
               })
-            }
-          }
-          }>
-            <CoverView>发布视频</CoverView>
-          </CoverView>
-        </CoverView>
-
-        <CoverView className="my" onClick={() => {
-          Taro.navigateTo({
-            url: '/pages/index/mine'
-          })
-        }}>
-          <CoverImage
-            className="addIcon"
-            src={user && user.logo ? user.logo : require("../../assets/images/avatar.png")} />
-        </CoverView>
-
-
+            }}
+            >
+              <CoverImage
+                className="addIcon"
+                src={user && user.logo ? user.logo : require("../../assets/images/avatar.png")} />
+            </CoverView>
+          )
+        }
       </View>
     )
   }

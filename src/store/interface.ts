@@ -20,11 +20,13 @@ export interface  ICommontStore {
   text: string;
   wxUserInfo: any;
   user: any;
+  isShow: boolean;
   areaRange: IArea;
   init: Function;
   getSystemInfo: Function;
   setData: Function;
   getUserInfo: Function;
+  nowShow: Function;
 }
 export interface  IVideoDetailStore {
   videoDetail: any;

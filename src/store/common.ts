@@ -3,7 +3,7 @@ import { error } from 'util';
 
 import Taro, { Component } from '@tarojs/taro';
 
-import { getArea, getConfig, getOpenId } from '../services/service';
+import { getArea, getConfig, getOpenId, nowShow } from '../services/service';
 import { IArea } from './interface';
 
 const commonStore = observable({
@@ -19,6 +19,7 @@ const commonStore = observable({
   windowWidth: 0,
   windowHeight: 0,
   area: [],
+  isShow: false,
   get areaRange ():Array<IArea> {
     return this.area;
   },
@@ -27,6 +28,7 @@ const commonStore = observable({
     await this.getUserInfo();
     await this.getConfig();
     await this.getArea();
+    await this.nowShow();
   },
   getSystemInfo() {
     Taro.getSystemInfo({
@@ -53,7 +55,7 @@ const commonStore = observable({
     });
     if (data) {
       await commonStore.setData('user', data);
-      if (!data.uid) {
+      if (!data.uid && this.isShow) {
         Taro.navigateTo({
           url: '/pages/register/register',
         });
@@ -65,14 +67,25 @@ const commonStore = observable({
     if (this.user.uid) {
       return;
     }
-    await Taro.navigateTo({
-      url: '/pages/register/register',
-    });
+    if(this.isShow) {
+      await Taro.navigateTo({
+        url: '/pages/register/register',
+      });
+    }
     throw new Error("无法操作");
   },
   async getArea() {
     const { data } = await getArea();
     this.area = data;
+  },
+  async nowShow() {
+    const { data } = await nowShow();
+    console.log('nowShow',data)
+    if( data === 1 ) {
+      this.isShow = true;
+    } else {
+      this.isShow = false;
+    }
   }
 
 })
